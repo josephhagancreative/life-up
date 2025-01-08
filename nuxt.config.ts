@@ -1,7 +1,10 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  modules: ["@nuxtjs/ionic"],
+  modules: ["@nuxtjs/ionic", "@nuxtjs/supabase"],
   ssr: false,
   compatibilityDate: "2024-11-01",
   devtools: { enabled: true },
+  supabase: {
+    types: "./database.types.ts",
+  },
 })

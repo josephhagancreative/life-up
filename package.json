@@ -20,6 +20,9 @@
     "@capacitor/ios": "6.2.0",
     "@capacitor/keyboard": "6.0.3",
     "@capacitor/status-bar": "6.0.2",
+    "@nuxtjs/supabase": "1.4.5",
+    "@supabase/supabase-js": "^2.47.10",
+    "date-fns": "^4.1.0",
     "nuxt": "^3.14.1592",
     "vue": "latest",
     "vue-router": "latest"
