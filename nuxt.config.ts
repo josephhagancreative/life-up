@@ -7,4 +7,9 @@ export default defineNuxtConfig({
   supabase: {
     types: "./database.types.ts",
   },
+  runtimeConfig: {
+    public: {
+      baseUrl: "",
+    },
+  },
 })

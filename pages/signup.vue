@@ -28,6 +28,7 @@
 
 <script lang="ts" setup>
 const supabase = useSupabaseClient()
+const config = useRuntimeConfig()
 const email = ref("")
 const username = ref("")
 
@@ -36,7 +37,7 @@ const signInWithOtp = async () => {
     email: email.value,
     password: "example-password",
     options: {
-      emailRedirectTo: "http://localhost:3000/confirm",
+      emailRedirectTo: config.public.baseUrl as string,
       data: {
         username: username.value,
       },
