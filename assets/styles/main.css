@@ -1,0 +1,8 @@
+* {
+  font-family: Roboto;
+}
+
+root {
+  --ion-font-family: Roboto;
+  --ion-default-dynamic-font: Roboto;
+}

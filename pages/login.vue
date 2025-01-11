@@ -15,7 +15,6 @@
           ></ion-input>
           <ion-button @click="handleLogin">Login</ion-button>
         </ion-item>
-        {{ email }}
       </ion-list>
     </ion-content>
   </ion-page>

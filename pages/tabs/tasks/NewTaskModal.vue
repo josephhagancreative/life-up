@@ -15,7 +15,7 @@
           <ion-select
             label="Task Type"
             placeholder="Select a type"
-            v-model="selectedTaskType"
+            v-model="formFields.selectedTaskType"
           >
             <ion-select-option v-for="type of taskTypes" :value="type.id">{{
               type.name
@@ -23,18 +23,18 @@
             <ion-select-option :value="'new'">Add a type</ion-select-option>
           </ion-select>
         </ion-item>
-        <ion-item v-if="selectedTaskType === 'new'">
+        <ion-item v-if="formFields.selectedTaskType === 'new'">
           <ion-input
             label="New Task Type"
             placeholder="Enter type name"
-            v-model="taskTypeName"
+            v-model="formFields.taskTypeName"
           ></ion-input>
         </ion-item>
         <ion-item>
           <ion-input
             label="Task"
             placeholder="Enter task"
-            v-model="taskName"
+            v-model="formFields.taskName"
           ></ion-input>
         </ion-item>
         <ion-item>
@@ -42,7 +42,7 @@
             type="number"
             label="Experience"
             placeholder="Enter XP value"
-            v-model="xpValue"
+            v-model="formFields.xpValue"
           ></ion-input>
         </ion-item>
         <ion-item>
@@ -55,6 +55,7 @@
 
 <script setup lang="ts">
 import type { TaskType } from "~/types/tables"
+import { cloneDeep } from "lodash"
 
 const emits = defineEmits<{
   (e: "addedTask"): void
@@ -63,17 +64,37 @@ const emits = defineEmits<{
 const supabase = useSupabaseClient()
 
 const isOpen = ref(false)
-const selectedTaskType = ref()
-const taskTypeName = ref("")
-const taskName = ref("")
-const xpValue = ref(0)
+
+type FormFields = {
+  selectedTaskType: string | number | null
+  taskTypeName: string
+  taskName: string
+  xpValue: number
+}
+
+const defaultFormFields: FormFields = {
+  selectedTaskType: null,
+  taskTypeName: "",
+  taskName: "",
+  xpValue: 0,
+}
+
+const formFields = ref(defaultFormFields)
 
 const setOpen = (open: boolean) => (isOpen.value = open)
 
-watch(selectedTaskType, (oldVal, newVal) => {
-  if (oldVal === "new" && newVal !== "new") {
-    taskTypeName.value = ""
+watch(
+  () => formFields.value.selectedTaskType,
+  (newVal, oldVal) => {
+    if (oldVal === "new" && newVal !== "new") {
+      formFields.value.taskTypeName = ""
+    }
   }
+)
+
+watch(isOpen, () => {
+  console.log("run")
+  formFields.value = cloneDeep(defaultFormFields)
 })
 
 const user = useSupabaseUser()
@@ -106,13 +127,13 @@ const handleAddTask = async () => {
   if (!user.value) {
     return
   }
-  let taskType = selectedTaskType.value
+  let taskType = formFields.value.selectedTaskType
 
   if (taskType === "new") {
     const addedTaskType = await supabase
       .from("task_types")
       .insert({
-        name: taskTypeName.value,
+        name: formFields.value.taskTypeName,
         profile_id: user.value.id,
       })
       .select("id")
@@ -122,9 +143,9 @@ const handleAddTask = async () => {
   }
   const newTask = await supabase.from("tasks").insert({
     profile_id: user.value.id,
-    type_id: taskType,
-    name: taskName.value,
-    experience: xpValue.value,
+    type_id: taskType as string,
+    name: formFields.value.taskName,
+    experience: formFields.value.xpValue,
   })
   if (newTask.status === 201) {
     emits("addedTask")
