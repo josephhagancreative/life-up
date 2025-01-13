@@ -8,12 +8,22 @@
     <ion-refresher slot="fixed" @ionRefresh="handleRefresh($event)">
       <ion-refresher-content> </ion-refresher-content>
     </ion-refresher>
-    <ion-content class="ion-padding" v-if="userData">
+    <ion-content class="ion-padding ion-content-scroll-host" v-if="userData">
       <h1 class="header">Welcome {{ userData.username }}</h1>
+      <p class="experience-header">Level:{{ currentLevel }}</p>
       <p class="experience-header">
         Total Experience: {{ userData.experience }}
       </p>
-      <div class="ion-content-scroll-host task-history-container">
+      <div class="experience-bar-container">
+        <progress-bar
+          :currentNumber="userData.experience"
+          :maxNumber="nextLevel.xpRequired"
+        />
+      </div>
+      <p class="experience-header">
+        XP until level {{ nextLevel.level }}: {{ nextLevel.xpRequired }}
+      </p>
+      <div class="task-history-container">
         <p>History:</p>
         <div class="task-history" v-for="task in taskHistories" :key="task.id">
           <div class="text-container">
@@ -30,8 +40,23 @@
 <script lang="ts" setup>
 import type { Profile, Task, TaskHistory } from "~/types/tables"
 
+type AllLevels = { level: number; xpRequired: number }
+
 const supabase = useSupabaseClient()
 const user = useSupabaseUser()
+
+const levels = ref<AllLevels[]>(
+  calculateLevels(BASE_XP, MAX_LVL, GROWTH_FACTOR)
+)
+const currentLevel = computed(() =>
+  getCurrentLevel(levels.value, userData.value?.experience!)
+)
+const nextLevel = computed(() => {
+  const userLevelIdx = levels.value.findIndex(
+    (level) => level.level === currentLevel.value
+  )
+  return levels.value[userLevelIdx + 1]
+})
 
 const { data: userData, refresh: refreshUserData } = useAsyncData(
   "user",
@@ -68,7 +93,7 @@ const { data: taskHistories } = useAsyncData("taskHistories", async () => {
       `
       id,
       completed_at,
-      experience_earned, 
+      experience_earned,
       tasks (
         id,
         name
@@ -88,6 +113,31 @@ type IonicRefresher = {
 const handleRefresh = async (event: IonicRefresher) => {
   await refreshUserData()
   event.target.complete()
+}
+
+function calculateLevels(
+  baseXP: number,
+  maxLevel: number,
+  growthFactor: number
+) {
+  const levels = [{ level: 1, xpRequired: 0 }] // Level 1 starts at 0 XP
+  for (let n = 2; n <= maxLevel; n++) {
+    const xpDifference = baseXP * Math.pow(Math.log2(n), growthFactor)
+    const totalXP = Math.round(
+      xpDifference + levels[levels.length - 1].xpRequired
+    )
+    levels.push({ level: n, xpRequired: totalXP })
+  }
+  return levels
+}
+
+function getCurrentLevel(levels: AllLevels[], currentXp: number): number {
+  for (let i = levels.length - 1; i >= 0; i--) {
+    if (currentXp >= levels[i].xpRequired) {
+      return levels[i].level
+    }
+  }
+  return 1
 }
 </script>
 
@@ -130,5 +180,10 @@ const handleRefresh = async (event: IonicRefresher) => {
   > .task {
     font-weight: 500;
   }
+}
+
+.experience-bar-container {
+  width: 100%;
+  padding: 1rem;
 }
 </style>
