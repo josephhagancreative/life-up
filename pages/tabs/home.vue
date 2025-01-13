@@ -6,16 +6,19 @@
       </ion-toolbar>
     </ion-header>
     <ion-refresher slot="fixed" @ionRefresh="handleRefresh($event)">
-      <ion-refresher-content> </ion-refresher-content>
+      <ion-refresher-content>
+        <p>Loading..</p>
+      </ion-refresher-content>
     </ion-refresher>
     <ion-content class="ion-padding ion-content-scroll-host" v-if="userData">
       <h1 class="header">Welcome {{ userData.username }}</h1>
-      <p class="experience-header">Level:{{ currentLevel }}</p>
+      <p class="experience-header">Level:{{ currentLevel.level }}</p>
       <p class="experience-header">
         Total Experience: {{ userData.experience }}
       </p>
       <div class="experience-bar-container">
         <progress-bar
+          :initialNumber="currentLevel.xpRequired"
           :currentNumber="userData.experience"
           :maxNumber="nextLevel.xpRequired"
         />
@@ -53,7 +56,7 @@ const currentLevel = computed(() =>
 )
 const nextLevel = computed(() => {
   const userLevelIdx = levels.value.findIndex(
-    (level) => level.level === currentLevel.value
+    (level) => level.level === currentLevel.value.level
   )
   return levels.value[userLevelIdx + 1]
 })
@@ -120,7 +123,7 @@ function calculateLevels(
   maxLevel: number,
   growthFactor: number
 ) {
-  const levels = [{ level: 1, xpRequired: 0 }] // Level 1 starts at 0 XP
+  const levels = [{ level: 1, xpRequired: 0 }]
   for (let n = 2; n <= maxLevel; n++) {
     const xpDifference = baseXP * Math.pow(Math.log2(n), growthFactor)
     const totalXP = Math.round(
@@ -131,13 +134,13 @@ function calculateLevels(
   return levels
 }
 
-function getCurrentLevel(levels: AllLevels[], currentXp: number): number {
+function getCurrentLevel(levels: AllLevels[], currentXp: number) {
   for (let i = levels.length - 1; i >= 0; i--) {
     if (currentXp >= levels[i].xpRequired) {
-      return levels[i].level
+      return levels[i]
     }
   }
-  return 1
+  return { level: 1, xpRequired: 0 }
 }
 </script>
 

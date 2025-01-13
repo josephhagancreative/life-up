@@ -8,13 +8,17 @@
 import { round } from "lodash"
 
 const props = defineProps<{
+  initialNumber: number
   maxNumber: number
   currentNumber: number
 }>()
 
-const percentage = computed(() =>
-  round((props.currentNumber / props.maxNumber) * 100)
-)
+const percentage = computed(() => {
+  const totalDifference = props.maxNumber - props.initialNumber
+  const currentDifference = props.currentNumber - props.initialNumber
+  if (totalDifference <= 0) return 0
+  return round((currentDifference / totalDifference) * 100)
+})
 </script>
 
 <style scoped>
