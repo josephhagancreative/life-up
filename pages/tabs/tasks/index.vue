@@ -26,6 +26,7 @@ const supabase = useSupabaseClient()
 const user = useSupabaseUser()
 
 const { userData, userCompleteTask } = useUser()
+const { addTaskHistory } = useTaskHistory()
 
 const { data: taskTypesData, refresh: refetchTasks } = useAsyncData(
   "taskTypesWithTasks",
@@ -71,12 +72,7 @@ const completeTask = async (task: Task) => {
   }
   const updatedUser = await userCompleteTask(task)
   if (updatedUser.status === 200 && updatedUser.data) {
-    const createdTaskHistory = await supabase.from("task_history").insert({
-      experience_earned: task.experience,
-      profile_id: user.value.id,
-      task_id: task.id,
-      completed_at: new Date().toISOString(),
-    })
+    const createdTaskHistory = await addTaskHistory(task)
     if (createdTaskHistory.status === 201) {
       const toast = await toastController.create({
         header: "Task Completed: ",

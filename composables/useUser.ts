@@ -1,5 +1,5 @@
 import { calculateLevels, getCurrentLevel } from "~/helpers/user"
-import type { Task, TaskHistory } from "~/types/tables"
+import type { Task } from "~/types/tables"
 import type { AllLevels, UserProfile } from "~/types/user"
 
 export const useUser = () => {
@@ -42,37 +42,18 @@ export const useUser = () => {
     }
   )
 
-  const { data: taskHistories, refresh: refetchHistories } = useAsyncData(
-    "taskHistories",
-    async () => {
-      if (!user.value) {
-        return
-      }
-      const { data } = await supabase
-        .from("task_history")
-        .select(
-          `
-      id,
-      completed_at,
-      experience_earned,
-      tasks (
-        id,
-        name
-      )
-        `
-        )
-        .eq("profile_id", user.value.id)
-        .order("completed_at", { ascending: false })
-        .limit(10)
-
-      return data as Array<TaskHistory & { tasks: Pick<Task, "id" | "name"> }>
-    }
-  )
-
   const userCompleteTask = async (task: Task) => {
     return await supabase
       .from("profiles")
       .update({ experience: userData.value!.experience + task.experience })
+      .eq("id", user.value!.id)
+      .select()
+  }
+
+  const userDeleteTaskHistory = async (xp: number) => {
+    return await supabase
+      .from("profiles")
+      .update({ experience: xp })
       .eq("id", user.value!.id)
       .select()
   }
@@ -83,7 +64,6 @@ export const useUser = () => {
     currentLevel,
     nextLevel,
     userCompleteTask,
-    taskHistories,
-    refetchHistories,
+    userDeleteTaskHistory,
   }
 }

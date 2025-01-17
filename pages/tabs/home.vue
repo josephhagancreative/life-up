@@ -24,6 +24,13 @@
             <span class="task">{{ task.tasks.name }}</span>
           </div>
           <span>+{{ task.experience_earned }}xp</span>
+          <ion-button
+            color="danger"
+            shape="round"
+            @click="handleDeleteTaskHistory(task)"
+          >
+            <ion-icon slot="icon-only" :icon="ioniconsTrashBin" />
+          </ion-button>
         </div>
       </div>
     </ion-content>
@@ -31,14 +38,17 @@
 </template>
 
 <script lang="ts" setup>
+import type { ITaskHistory } from "~/types/taskHistory"
+
 const {
   userData,
   refreshUserData,
   currentLevel,
   nextLevel,
-  taskHistories,
-  refetchHistories,
+  userDeleteTaskHistory,
 } = useUser()
+
+const { taskHistories, refetchHistories, deleteTaskHistory } = useTaskHistory()
 
 type IonicRefresher = {
   target: HTMLIonRefresherElement
@@ -47,6 +57,15 @@ const handleRefresh = async (event: IonicRefresher) => {
   await refreshUserData()
   await refetchHistories()
   event.target.complete()
+}
+
+const handleDeleteTaskHistory = async (task: ITaskHistory) => {
+  await deleteTaskHistory(task.id)
+  await userDeleteTaskHistory(
+    userData.value?.experience! - task.experience_earned
+  )
+  await refreshUserData()
+  await refetchHistories()
 }
 </script>
 
