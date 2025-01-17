@@ -20,12 +20,12 @@
 <script lang="ts" setup>
 import type { TaskType, Task } from "~/types/tables"
 import NewTaskModal from "./NewTaskModal.vue"
+import { incrementExperience } from "~/mutations/user"
 
 const supabase = useSupabaseClient()
 const user = useSupabaseUser()
 
-const { userData, refreshUserData, currentLevel, nextLevel, userCompleteTask } =
-  useUser()
+const { userData, userCompleteTask } = useUser()
 
 const { data: taskTypesData, refresh: refetchTasks } = useAsyncData(
   "taskTypesWithTasks",
@@ -86,7 +86,11 @@ const completeTask = async (task: Task) => {
         swipeGesture: "vertical",
       })
       await toast.present()
-      await refreshUserData()
+      const targetXP = updatedUser.data[0].experience
+      if (!userData.value) {
+        return
+      }
+      await incrementExperience(userData, targetXP)
     }
   }
 }
