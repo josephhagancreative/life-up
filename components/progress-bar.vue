@@ -1,6 +1,10 @@
 <template>
   <div class="container">
     <div class="inner" :style="{ width: `${percentage}%` }" />
+    <div class="text-container">
+      <span>{{ initialNumber }}</span>
+      <span>{{ maxNumber }}</span>
+    </div>
   </div>
 </template>
 
@@ -39,5 +43,11 @@ const percentage = computed(() => {
     #3a3a3a 10px,
     #3a3a3a 20px
   );
+}
+
+.text-container {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 0.2rem;
 }
 </style>

@@ -1,12 +1,7 @@
 <template>
-  <ion-page>
-    <ion-header>
-      <ion-toolbar>
-        <ion-title>Stats</ion-title>
-      </ion-toolbar>
-    </ion-header>
+  <PageContainer>
     <ion-content class="ion-padding"> Stats </ion-content>
-  </ion-page>
+  </PageContainer>
 </template>
 
 <script lang="ts" setup></script>

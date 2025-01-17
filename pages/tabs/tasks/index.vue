@@ -1,10 +1,5 @@
 <template>
-  <ion-page>
-    <ion-header>
-      <ion-toolbar>
-        <ion-title>Tasks</ion-title>
-      </ion-toolbar>
-    </ion-header>
+  <PageContainer>
     <ion-content>
       <div class="task-container">
         <div v-for="type of taskTypesData" class="task-type">
@@ -19,7 +14,7 @@
         <NewTaskModal @added-task="refetchTasks" />
       </div>
     </ion-content>
-  </ion-page>
+  </PageContainer>
 </template>
 
 <script lang="ts" setup>
@@ -28,6 +23,9 @@ import NewTaskModal from "./NewTaskModal.vue"
 
 const supabase = useSupabaseClient()
 const user = useSupabaseUser()
+
+const { userData, refreshUserData, currentLevel, nextLevel, userCompleteTask } =
+  useUser()
 
 const { data: taskTypesData, refresh: refetchTasks } = useAsyncData(
   "taskTypesWithTasks",
@@ -71,22 +69,7 @@ const completeTask = async (task: Task) => {
   if (!user.value) {
     return
   }
-  const fetchedUser = await supabase
-    .from("profiles")
-    .select(
-      `
-  experience
-  `
-    )
-    .eq("id", user.value.id)
-  if (fetchedUser.error) {
-    return
-  }
-  const updatedUser = await supabase
-    .from("profiles")
-    .update({ experience: fetchedUser.data[0].experience + task.experience })
-    .eq("id", user.value.id)
-    .select()
+  const updatedUser = await userCompleteTask(task)
   if (updatedUser.status === 200 && updatedUser.data) {
     const createdTaskHistory = await supabase.from("task_history").insert({
       experience_earned: task.experience,
@@ -103,6 +86,7 @@ const completeTask = async (task: Task) => {
         swipeGesture: "vertical",
       })
       await toast.present()
+      await refreshUserData()
     }
   }
 }

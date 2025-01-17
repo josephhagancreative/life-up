@@ -1,16 +1,9 @@
 <template>
-  <ion-page>
-    <ion-header>
-      <ion-toolbar>
-        <ion-title>Home</ion-title>
-      </ion-toolbar>
-    </ion-header>
-    <ion-refresher slot="fixed" @ionRefresh="handleRefresh($event)">
-      <ion-refresher-content>
-        <p>Loading..</p>
-      </ion-refresher-content>
-    </ion-refresher>
+  <PageContainer>
     <ion-content class="ion-padding ion-content-scroll-host" v-if="userData">
+      <ion-refresher slot="fixed" @ionRefresh="handleRefresh($event)">
+        <ion-refresher-content></ion-refresher-content>
+      </ion-refresher>
       <h1 class="header">Welcome {{ userData.username }}</h1>
       <p class="experience-header">Level:{{ currentLevel.level }}</p>
       <p class="experience-header">
@@ -23,9 +16,6 @@
           :maxNumber="nextLevel.xpRequired"
         />
       </div>
-      <p class="experience-header">
-        XP until level {{ nextLevel.level }}: {{ nextLevel.xpRequired }}
-      </p>
       <div class="task-history-container">
         <p>History:</p>
         <div class="task-history" v-for="task in taskHistories" :key="task.id">
@@ -37,110 +27,26 @@
         </div>
       </div>
     </ion-content>
-  </ion-page>
+  </PageContainer>
 </template>
 
 <script lang="ts" setup>
-import type { Profile, Task, TaskHistory } from "~/types/tables"
-
-type AllLevels = { level: number; xpRequired: number }
-
-const supabase = useSupabaseClient()
-const user = useSupabaseUser()
-
-const levels = ref<AllLevels[]>(
-  calculateLevels(BASE_XP, MAX_LVL, GROWTH_FACTOR)
-)
-const currentLevel = computed(() =>
-  getCurrentLevel(levels.value, userData.value?.experience!)
-)
-const nextLevel = computed(() => {
-  const userLevelIdx = levels.value.findIndex(
-    (level) => level.level === currentLevel.value.level
-  )
-  return levels.value[userLevelIdx + 1]
-})
-
-const { data: userData, refresh: refreshUserData } = useAsyncData(
-  "user",
-  async () => {
-    if (!user.value) {
-      return
-    }
-    const { data } = await supabase
-      .from("profiles")
-      .select(
-        `
-    username,
-    avatar_url,
-    email,
-    experience
-    `
-      )
-      .eq("id", user.value.id)
-      .single<
-        Pick<Profile, "username" | "avatar_url" | "email" | "experience">
-      >()
-
-    return data
-  }
-)
-
-const { data: taskHistories } = useAsyncData("taskHistories", async () => {
-  if (!user.value) {
-    return
-  }
-  const { data } = await supabase
-    .from("task_history")
-    .select(
-      `
-      id,
-      completed_at,
-      experience_earned,
-      tasks (
-        id,
-        name
-      )
-        `
-    )
-    .eq("profile_id", user.value.id)
-    .order("completed_at", { ascending: false })
-    .limit(10)
-
-  return data as Array<TaskHistory & { tasks: Pick<Task, "id" | "name"> }>
-})
+const {
+  userData,
+  refreshUserData,
+  currentLevel,
+  nextLevel,
+  taskHistories,
+  refetchHistories,
+} = useUser()
 
 type IonicRefresher = {
   target: HTMLIonRefresherElement
 }
 const handleRefresh = async (event: IonicRefresher) => {
   await refreshUserData()
+  await refetchHistories()
   event.target.complete()
-}
-
-function calculateLevels(
-  baseXP: number,
-  maxLevel: number,
-  growthFactor: number
-) {
-  const levels = [{ level: 1, xpRequired: 0 }]
-  for (let n = 2; n <= maxLevel; n++) {
-    const xpDifference = baseXP * Math.pow(Math.log2(n), growthFactor)
-    const totalXP = Math.round(
-      xpDifference + levels[levels.length - 1].xpRequired
-    )
-    levels.push({ level: n, xpRequired: totalXP })
-  }
-  return levels
-}
-
-function getCurrentLevel(levels: AllLevels[], currentXp: number) {
-  for (let i = levels.length - 1; i >= 0; i--) {
-    if (currentXp >= levels[i].xpRequired) {
-      return levels[i]
-    }
-  }
-  return { level: 1, xpRequired: 0 }
 }
 </script>
 
