@@ -18,20 +18,32 @@
       </div>
       <div class="task-history-container">
         <p>History:</p>
-        <div class="task-history" v-for="task in taskHistories" :key="task.id">
-          <div class="text-container">
-            <p class="date">{{ formatToLocalDate(task.completed_at!) }}</p>
-            <span class="task">{{ task.tasks.name }}</span>
-          </div>
-          <span>+{{ task.experience_earned }}xp</span>
-          <ion-button
-            color="danger"
-            shape="round"
-            @click="handleDeleteTaskHistory(task)"
-          >
-            <ion-icon slot="icon-only" :icon="ioniconsTrashBin" />
-          </ion-button>
-        </div>
+        <ion-item-sliding
+          class="task-history"
+          v-for="task in taskHistories"
+          :key="task.id"
+        >
+          <ion-item>
+            <div class="task-history-item">
+              <div class="text-container">
+                <p class="date">{{ formatToLocalDate(task.completed_at!) }}</p>
+                <span class="task">{{ task.tasks.name }}</span>
+              </div>
+              <span>+{{ task.experience_earned }}xp</span>
+            </div>
+          </ion-item>
+          <ion-item-options>
+            <ion-item-option>
+              <ion-button
+                color="danger"
+                size="large"
+                @click="handleDeleteTaskHistory(task)"
+              >
+                <ion-icon slot="icon-only" :icon="ioniconsTrashBin" />
+              </ion-button>
+            </ion-item-option>
+          </ion-item-options>
+        </ion-item-sliding>
       </div>
     </ion-content>
   </PageContainer>
@@ -87,12 +99,27 @@ const handleDeleteTaskHistory = async (task: ITaskHistory) => {
 }
 
 .task-history {
+  border-radius: 0.25rem;
+  border: 1px solid grey;
+}
+
+.task-history-item {
   display: flex;
+  flex: 1;
   justify-content: space-between;
   align-items: center;
-  border-radius: 0.25rem;
   padding: 0.5rem;
-  border: 1px solid grey;
+}
+
+ion-item {
+  --inner-border-width: 0px;
+  --padding-start: 0px;
+}
+
+ion-item-option::part(native) {
+  background-color: var(--ion-color-danger);
+  --inner-border-width: 0px;
+  padding: 0;
 }
 
 .text-container {
