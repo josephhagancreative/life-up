@@ -28,26 +28,23 @@ const percentage = computed(() => {
 <style scoped>
 .container {
   width: 100%;
-  height: 20px;
+  height: 10px;
   background-color: rgb(189, 189, 189);
-  border: 1px solid rgb(189, 189, 189);
+  outline: 1px solid rgb(189, 189, 189);
+  border-radius: 0.2rem;
 }
 
 .inner {
-  width: 10px;
-  height: 19px;
-  background: repeating-linear-gradient(
-    45deg,
-    #555555,
-    #555555 10px,
-    #3a3a3a 10px,
-    #3a3a3a 20px
-  );
+  width: 1px;
+  height: 10px;
+  background-color: var(--ion-color-primary);
+  border-radius: 0.2rem;
 }
 
 .text-container {
   display: flex;
   justify-content: space-between;
   margin-top: 0.2rem;
+  color: var(--ion-color-primary-tint);
 }
 </style>

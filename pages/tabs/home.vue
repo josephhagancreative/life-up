@@ -5,9 +5,11 @@
         <ion-refresher-content></ion-refresher-content>
       </ion-refresher>
       <h1 class="header">Welcome {{ userData.username }}</h1>
-      <p class="experience-header">Level:{{ currentLevel.level }}</p>
       <p class="experience-header">
-        Total Experience: {{ userData.experience }}
+        Level: <span class="number">{{ currentLevel.level }}</span>
+      </p>
+      <p class="experience-header">
+        Total XP: <span class="number">{{ userData.experience }}</span>
       </p>
       <div class="experience-bar-container">
         <progress-bar
@@ -89,6 +91,12 @@ const handleDeleteTaskHistory = async (task: ITaskHistory) => {
 .experience-header {
   text-align: center;
   font-size: 1.2rem;
+  margin: 0.5rem;
+
+  > .number {
+    color: var(--ion-color-primary-shade);
+    font-weight: bold;
+  }
 }
 
 .task-history-container {
@@ -139,6 +147,6 @@ ion-item-option::part(native) {
 
 .experience-bar-container {
   width: 100%;
-  padding: 1rem;
+  padding: 0 1rem 1.5rem;
 }
 </style>
