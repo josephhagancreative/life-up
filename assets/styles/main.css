@@ -3,7 +3,135 @@
   box-sizing: border-box;
 }
 
-root {
+:root {
   --ion-font-family: Roboto;
   --ion-default-dynamic-font: Roboto;
+
+  /* Colors */
+  --theme-red: #f28b82;
+  --theme-red-rgb: 242, 139, 130;
+  --theme-red-contrast: #000000;
+  --theme-red-contrast-rgb: 0, 0, 0;
+  --theme-red-shade: #d57a72;
+  --theme-red-tint: #f3978f;
+
+  --theme-orange: #f9be6c;
+  --theme-orange-rgb: 249, 190, 108;
+  --theme-orange-contrast: #000000;
+  --theme-orange-contrast-rgb: 0, 0, 0;
+  --theme-orange-shade: #dba75f;
+  --theme-orange-tint: #fac57b;
+
+  --theme-yellow: #ffde7a;
+  --theme-yellow-rgb: 255, 222, 122;
+  --theme-yellow-contrast: #000000;
+  --theme-yellow-contrast-rgb: 0, 0, 0;
+  --theme-yellow-shade: #e0c36b;
+  --theme-yellow-tint: #ffe187;
+
+  --theme-pink: #ebb7f0;
+  --theme-pink-rgb: 235, 183, 240;
+  --theme-pink-contrast: #000000;
+  --theme-pink-contrast-rgb: 0, 0, 0;
+  --theme-pink-shade: #cfa1d3;
+  --theme-pink-tint: #edbef2;
+
+  --theme-mauve: #b089c6;
+  --theme-mauve-rgb: 176, 137, 198;
+  --theme-mauve-contrast: #000000;
+  --theme-mauve-contrast-rgb: 0, 0, 0;
+  --theme-mauve-shade: #9b79ae;
+  --theme-mauve-tint: #b895cc;
+
+  --theme-blue: #81bbd9;
+  --theme-blue-rgb: 135, 197, 230;
+  --theme-blue-contrast: #000000;
+  --theme-blue-contrast-rgb: 0, 0, 0;
+  --theme-blue-shade: #77adca;
+  --theme-blue-tint: #93cbe9;
+
+  --theme-teal: #6fa394;
+  --theme-teal-rgb: 111, 163, 148;
+  --theme-teal-contrast: #000000;
+  --theme-teal-contrast-rgb: 0, 0, 0;
+  --theme-teal-shade: #628f82;
+  --theme-teal-tint: #7dac9f;
+
+  --theme-green: #98d7a0;
+  --theme-green-rgb: 152, 215, 160;
+  --theme-green-contrast: #000000;
+  --theme-green-contrast-rgb: 0, 0, 0;
+  --theme-green-shade: #86bd8d;
+  --theme-green-tint: #a2dbaa;
+
+  --theme-slate: #4a4a4a;
+  --theme-slate-rgb: 74, 74, 74;
+  --theme-slate-contrast: #ffffff;
+  --theme-slate-contrast-rgb: 255, 255, 255;
+  --theme-slate-shade: #414141;
+  --theme-slate-tint: #5c5c5c;
+
+  /* Theme Colors */
+  --ion-color-primary: #6fa394;
+  --ion-color-primary-rgb: 111, 163, 148;
+  --ion-color-primary-contrast: #000000;
+  --ion-color-primary-contrast-rgb: 0, 0, 0;
+  --ion-color-primary-shade: #628f82;
+  --ion-color-primary-tint: #7dac9f;
+
+  --ion-color-secondary: #0163aa;
+  --ion-color-secondary-rgb: 1, 99, 170;
+  --ion-color-secondary-contrast: #ffffff;
+  --ion-color-secondary-contrast-rgb: 255, 255, 255;
+  --ion-color-secondary-shade: #015796;
+  --ion-color-secondary-tint: #1a73b3;
+
+  --ion-color-tertiary: #6030ff;
+  --ion-color-tertiary-rgb: 96, 48, 255;
+  --ion-color-tertiary-contrast: #ffffff;
+  --ion-color-tertiary-contrast-rgb: 255, 255, 255;
+  --ion-color-tertiary-shade: #542ae0;
+  --ion-color-tertiary-tint: #7045ff;
+
+  --ion-color-success: #58b38b;
+  --ion-color-success-rgb: 88, 179, 139;
+  --ion-color-success-contrast: #000000;
+  --ion-color-success-contrast-rgb: 0, 0, 0;
+  --ion-color-success-shade: #4da17c;
+  --ion-color-success-tint: #6bc09a;
+
+  --ion-color-warning: #f2a02b;
+  --ion-color-warning-rgb: 242, 160, 43;
+  --ion-color-warning-contrast: #000000;
+  --ion-color-warning-contrast-rgb: 0, 0, 0;
+  --ion-color-warning-shade: #d18f27;
+  --ion-color-warning-tint: #f4af51;
+
+  --ion-color-danger: #bf3f4c;
+  --ion-color-danger-rgb: 191, 63, 76;
+  --ion-color-danger-contrast: #ffffff;
+  --ion-color-danger-contrast-rgb: 255, 255, 255;
+  --ion-color-danger-shade: #a43741;
+  --ion-color-danger-tint: #cc5966;
+
+  --ion-color-light: #fffaec;
+  --ion-color-light-rgb: 255, 250, 236;
+  --ion-color-light-contrast: #000000;
+  --ion-color-light-contrast-rgb: 0, 0, 0;
+  --ion-color-light-shade: #e0dcd0;
+  --ion-color-light-tint: #fffbee;
+
+  --ion-color-medium: #5f5f5f;
+  --ion-color-medium-rgb: 95, 95, 95;
+  --ion-color-medium-contrast: #ffffff;
+  --ion-color-medium-contrast-rgb: 255, 255, 255;
+  --ion-color-medium-shade: #545454;
+  --ion-color-medium-tint: #6f6f6f;
+
+  --ion-color-dark: #3d3d3d;
+  --ion-color-dark-rgb: 61, 61, 61;
+  --ion-color-dark-contrast: #ffffff;
+  --ion-color-dark-contrast-rgb: 255, 255, 255;
+  --ion-color-dark-shade: #363636;
+  --ion-color-dark-tint: #505050;
 }

@@ -1,0 +1,10 @@
+export type AppThemeColors =
+  | "red"
+  | "orange"
+  | "yellow"
+  | "pink"
+  | "mauve"
+  | "blue"
+  | "teal"
+  | "green"
+  | "slate"
