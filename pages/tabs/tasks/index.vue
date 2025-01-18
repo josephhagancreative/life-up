@@ -77,8 +77,8 @@ const completeTask = async (task: Task) => {
       const toast = await toastController.create({
         header: "Task Completed: ",
         message: `Completed ${task.name}! New XP: ${updatedUser.data[0].experience}`,
-        color: "success",
         duration: 5000,
+        cssClass: "task-complete-toast",
         swipeGesture: "vertical",
       })
       await toast.present()
@@ -92,12 +92,28 @@ const completeTask = async (task: Task) => {
 }
 </script>
 
-<style scoped>
+<style>
 ion-content {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
   padding: 0.5rem;
+}
+
+ion-toast.task-complete-toast {
+  --background: #fff;
+  --box-shadow: 3px 3px 10px 0 rgba(0, 0, 0, 0.2);
+  --border-width: 5px;
+  --border-style: solid;
+  --border-color: var(--ion-color-primary-tint);
+
+  &::part(header) {
+    color: var(--ion-color-primary-shade);
+  }
+
+  &::part(message) {
+    font-weight: bold;
+  }
 }
 
 .task-type {
