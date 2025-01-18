@@ -8,6 +8,13 @@
   --ion-default-dynamic-font: Roboto;
 
   /* Colors */
+
+  --off-white: #fafafa;
+  --light-grey: #eaeaea;
+  --mid-grey: #ddd;
+
+  --line-color: #bfbfbf;
+
   --theme-red: #f28b82;
   --theme-red-rgb: 242, 139, 130;
   --theme-red-contrast: #000000;
@@ -22,7 +29,7 @@
   --theme-orange-shade: #dba75f;
   --theme-orange-tint: #fac57b;
 
-  --theme-yellow: #ffde7a;
+  --theme-yellow: #e7c355;
   --theme-yellow-rgb: 255, 222, 122;
   --theme-yellow-contrast: #000000;
   --theme-yellow-contrast-rgb: 0, 0, 0;

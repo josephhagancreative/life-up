@@ -1,11 +1,10 @@
 <template>
-  <ion-button expand="block" @click="setOpen(true)">Add Task</ion-button>
   <ion-modal :is-open="isOpen">
     <ion-header>
       <ion-toolbar>
         <ion-title>Add Task</ion-title>
         <ion-buttons slot="end">
-          <ion-button @click="setOpen(false)">Close</ion-button>
+          <ion-button @click="isOpen = false">Close</ion-button>
         </ion-buttons>
       </ion-toolbar>
     </ion-header>
@@ -63,7 +62,7 @@ const emits = defineEmits<{
 
 const supabase = useSupabaseClient()
 
-const isOpen = ref(false)
+const isOpen = defineModel<boolean>()
 
 type FormFields = {
   selectedTaskType: string | number | null
@@ -81,8 +80,6 @@ const defaultFormFields: FormFields = {
 
 const formFields = ref(defaultFormFields)
 
-const setOpen = (open: boolean) => (isOpen.value = open)
-
 watch(
   () => formFields.value.selectedTaskType,
   (newVal, oldVal) => {
@@ -93,7 +90,6 @@ watch(
 )
 
 watch(isOpen, () => {
-  console.log("run")
   formFields.value = cloneDeep(defaultFormFields)
 })
 

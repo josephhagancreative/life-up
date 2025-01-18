@@ -6,13 +6,26 @@
           <h3>{{ type.name }}</h3>
           <div v-for="task of type.tasks" class="task-item">
             <span> {{ task.name }} +{{ task.experience }}xp </span>
-            <ion-button shape="round" @click="completeTask(task)">
-              <ion-icon slot="icon-only" :icon="ioniconsCheckmark"></ion-icon>
+            <ion-button
+              shape="round"
+              color="success"
+              @click="completeTask(task)"
+            >
+              <ion-icon
+                slot="icon-only"
+                color="light"
+                :icon="ioniconsCheckmark"
+              ></ion-icon>
             </ion-button>
           </div>
         </div>
-        <NewTaskModal @added-task="refetchTasks" />
+        <NewTaskModal @added-task="refetchTasks" v-model="isOpen" />
       </div>
+      <ion-fab slot="fixed" vertical="bottom" horizontal="end">
+        <ion-fab-button @click="setOpen(true)">
+          <ion-icon :icon="ioniconsAdd"></ion-icon>
+        </ion-fab-button>
+      </ion-fab>
     </ion-content>
   </PageContainer>
 </template>
@@ -27,6 +40,10 @@ const user = useSupabaseUser()
 
 const { userData, userCompleteTask } = useUser()
 const { addTaskHistory } = useTaskHistory()
+
+const setOpen = (open: boolean) => (isOpen.value = open)
+
+const isOpen = ref(false)
 
 const { data: taskTypesData, refresh: refetchTasks } = useAsyncData(
   "taskTypesWithTasks",
@@ -92,46 +109,56 @@ const completeTask = async (task: Task) => {
 }
 </script>
 
-<style>
-ion-content {
+<style scoped>
+.task-container {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
   padding: 0.5rem;
-}
-
-ion-toast.task-complete-toast {
-  --background: #fff;
-  --box-shadow: 3px 3px 10px 0 rgba(0, 0, 0, 0.2);
-  --border-width: 5px;
-  --border-style: solid;
-  --border-color: var(--ion-color-primary-tint);
-
-  &::part(header) {
-    color: var(--ion-color-primary-shade);
-  }
-
-  &::part(message) {
-    font-weight: bold;
-  }
+  margin-bottom: 4rem;
 }
 
 .task-type {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-  background-color: #faf9f6;
+  background-color: var(--off-white);
+  border: 1px solid var(--line-color);
   border-radius: 1rem;
   padding: 0.5rem;
+
+  > h3 {
+    margin-left: 0.25rem;
+    font-weight: bold;
+    font-size: 1.2rem;
+  }
 }
 
 .task-item {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border: 1px solid gray;
+  border: 1px solid var(--line-color);
   background-color: white;
-  padding: 1rem;
+  padding: 0.5rem 0.75rem;
   border-radius: 1rem;
+}
+</style>
+
+<style>
+ion-toast.task-complete-toast {
+  --background: #fff;
+  --box-shadow: 3px 3px 10px 0 rgba(0, 0, 0, 0.2);
+  --border-width: 5px;
+  --border-style: solid;
+  --border-color: var(--ion-color-success-tint);
+
+  &::part(header) {
+    color: var(--ion-color-success-shade);
+  }
+
+  &::part(message) {
+    font-weight: bold;
+  }
 }
 </style>

@@ -29,8 +29,8 @@ const percentage = computed(() => {
 .container {
   width: 100%;
   height: 10px;
-  background-color: rgb(189, 189, 189);
-  outline: 1px solid rgb(189, 189, 189);
+  background-color: var(--light-grey);
+  outline: 1px solid var(--mid-grey);
   border-radius: 0.2rem;
 }
 

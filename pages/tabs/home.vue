@@ -19,7 +19,7 @@
         />
       </div>
       <div class="task-history-container">
-        <p>History:</p>
+        <h3>History</h3>
         <ion-item-sliding
           class="task-history"
           v-for="task in taskHistories"
@@ -92,6 +92,7 @@ const handleDeleteTaskHistory = async (task: ITaskHistory) => {
   text-align: center;
   font-size: 1.2rem;
   margin: 0.5rem;
+  margin-bottom: 1rem;
 
   > .number {
     color: var(--ion-color-primary-shade);
@@ -102,13 +103,27 @@ const handleDeleteTaskHistory = async (task: ITaskHistory) => {
 .task-history-container {
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: 0.5rem;
   margin: 0 0.5rem;
+  border-radius: 0.25rem;
+  padding: 0 0.5rem;
+  border: 1px solid var(--line-color);
+  background-color: var(--off-white);
+  margin-top: 1rem;
+  padding-bottom: 1rem;
+
+  > h3 {
+    color: var(--ion-color-primary-shade);
+    font-weight: bold;
+    font-size: 1.2rem;
+    letter-spacing: 1px;
+  }
 }
 
 .task-history {
   border-radius: 0.25rem;
-  border: 1px solid grey;
+  border: 1px solid var(--ion-color-primary-shade);
 }
 
 .task-history-item {
@@ -137,7 +152,7 @@ ion-item-option::part(native) {
   > .date {
     margin: 0;
     margin-bottom: 0.4rem;
-    color: darkslategray;
+    color: var(--ion-color-primary-shade);
   }
 
   > .task {

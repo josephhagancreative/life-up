@@ -76,7 +76,7 @@ const percentage = computed(() => {
 
 .circle-bg {
   fill: none;
-  stroke: #ddd;
+  stroke: var(--mid-grey);
 }
 
 .circle {
