@@ -141,11 +141,14 @@ const handleAddTask = async () => {
       taskType = addedTaskType.data![0].id
     }
   }
+  const taskName = taskTypes.value?.find((type) => type.id === taskType)?.name
+  const isOneTimeTask = taskName === ONE_TIME_STRING
   const newTask = await supabase.from("tasks").insert({
     profile_id: user.value.id,
     type_id: taskType as string,
     name: formFields.value.taskName,
     experience: formFields.value.xpValue,
+    is_one_time: isOneTimeTask,
   })
   if (newTask.status === 201) {
     emits("addedTask")

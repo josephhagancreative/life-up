@@ -9,7 +9,10 @@
         <div v-for="type of taskTypesData" class="task-type">
           <h3>{{ type.name }}</h3>
           <div v-for="task of type.tasks" class="task-item">
-            <span> {{ task.name }} +{{ task.experience }}xp </span>
+            <span>
+              {{ task.name }} +{{ task.experience }}xp
+              {{ task.is_one_time ? "onetime" : "" }}
+            </span>
             <ion-button
               shape="round"
               color="success"
@@ -69,7 +72,9 @@ const { data: taskTypesData, refresh: refetchTasks } = useAsyncData(
         experience,
         priority,
         deadline,
+        is_active,
         is_recurring,
+        is_one_time,
         recurrence_interval,
         created_at,
         updated_at
@@ -77,6 +82,7 @@ const { data: taskTypesData, refresh: refetchTasks } = useAsyncData(
     `
       )
       .eq("profile_id", user.value.id)
+      .filter("tasks.is_active", "eq", true)
 
     if (error) {
       console.error("Error fetching task types with tasks:", error)
@@ -110,6 +116,7 @@ const completeTask = async (task: Task) => {
         return
       }
       await incrementExperience(userData, targetXP)
+      await refetchTasks()
     }
   }
 }
