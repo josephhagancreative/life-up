@@ -41,10 +41,6 @@ const themeColors: AppThemeColors[] = [
 </script>
 
 <style scoped>
-.page-container {
-  padding: 0 1rem;
-}
-
 .button-container {
   display: flex;
   gap: 0.25rem;

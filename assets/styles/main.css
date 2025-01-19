@@ -142,3 +142,18 @@
   --ion-color-dark-shade: #363636;
   --ion-color-dark-tint: #505050;
 }
+
+/* Utils */
+.text-center {
+  text-align: center;
+}
+
+.page-container {
+  padding: 0 1rem;
+}
+
+/* Global styles */
+.empty-text {
+  font-size: 0.9rem;
+  color: var(--ion-color-medium);
+}

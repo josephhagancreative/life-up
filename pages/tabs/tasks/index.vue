@@ -2,6 +2,10 @@
   <PageContainer>
     <ion-content>
       <div class="task-container">
+        <h1>Tasks</h1>
+        <p class="empty-text text-center" v-if="!taskTypesData?.length">
+          No tasks yet!
+        </p>
         <div v-for="type of taskTypesData" class="task-type">
           <h3>{{ type.name }}</h3>
           <div v-for="task of type.tasks" class="task-item">
@@ -79,7 +83,9 @@ const { data: taskTypesData, refresh: refetchTasks } = useAsyncData(
       return
     }
 
-    return data as Array<TaskType & { tasks: Task[] }>
+    return data.filter((task) => task.tasks.length) as Array<
+      TaskType & { tasks: Task[] }
+    >
   }
 )
 
@@ -114,7 +120,7 @@ const completeTask = async (task: Task) => {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-  padding: 0.5rem;
+  padding: 0 1rem;
   margin-bottom: 4rem;
 }
 

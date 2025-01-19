@@ -2,9 +2,9 @@
   <PageContainer>
     <ion-content class="ion-padding ion-content-scroll-host" v-if="userData">
       <ion-refresher slot="fixed" @ionRefresh="handleRefresh($event)">
-        <ion-refresher-content></ion-refresher-content>
+        <ion-refresher-content refreshing-spinner="crescent" color="primary" />
       </ion-refresher>
-      <h1 class="header">Welcome {{ userData.username }}</h1>
+      <h1 class="header">Welcome {{ userData.username ?? "...you" }}</h1>
       <p class="experience-header">
         Level: <span class="number">{{ currentLevel.level }}</span>
       </p>
@@ -20,6 +20,9 @@
       </div>
       <div class="task-history-container">
         <h3>History</h3>
+        <p class="empty-text" v-if="!taskHistories?.length">
+          No task history yet!
+        </p>
         <ion-item-sliding
           class="task-history"
           v-for="task in taskHistories"
@@ -163,5 +166,9 @@ ion-item-option::part(native) {
 .experience-bar-container {
   width: 100%;
   padding: 0 1rem 1.5rem;
+}
+
+ion-refresher-content {
+  --color: var(--ion-color-primary);
 }
 </style>

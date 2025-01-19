@@ -91,33 +91,37 @@ watch(
 
 watch(isOpen, () => {
   formFields.value = cloneDeep(defaultFormFields)
+  refetchTaskTypes()
 })
 
 const user = useSupabaseUser()
 
-const { data: taskTypes } = useAsyncData("taskTypes", async () => {
-  if (!user.value) {
-    return
-  }
+const { data: taskTypes, refresh: refetchTaskTypes } = useAsyncData(
+  "taskTypes",
+  async () => {
+    if (!user.value) {
+      return
+    }
 
-  const { data, error } = await supabase
-    .from("task_types")
-    .select(
-      `
+    const { data, error } = await supabase
+      .from("task_types")
+      .select(
+        `
       id,
       name,
       created_at
     `
-    )
-    .eq("profile_id", user.value.id)
+      )
+      .eq("profile_id", user.value.id)
 
-  if (error) {
-    console.error("Error fetching task types with tasks:", error)
-    return
+    if (error) {
+      console.error("Error fetching task types with tasks:", error)
+      return
+    }
+
+    return data as Array<TaskType>
   }
-
-  return data as Array<TaskType>
-})
+)
 
 const handleAddTask = async () => {
   if (!user.value) {
