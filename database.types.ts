@@ -119,6 +119,8 @@ export type Database = {
           deadline: string | null
           experience: number
           id: string
+          is_active: boolean
+          is_one_time: boolean
           is_recurring: boolean
           name: string
           priority: number | null
@@ -132,6 +134,8 @@ export type Database = {
           deadline?: string | null
           experience?: number
           id?: string
+          is_active?: boolean
+          is_one_time?: boolean
           is_recurring?: boolean
           name: string
           priority?: number | null
@@ -145,6 +149,8 @@ export type Database = {
           deadline?: string | null
           experience?: number
           id?: string
+          is_active?: boolean
+          is_one_time?: boolean
           is_recurring?: boolean
           name?: string
           priority?: number | null

@@ -9,7 +9,8 @@
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
     "ionic:build": "npm run generate",
-    "ionic:serve": "npm run dev"
+    "ionic:serve": "npm run dev",
+    "gen-types": "dotenv -- cross-var npx supabase gen types typescript --project-id %PROJECT_REF% --schema public > database.types.ts"
   },
   "dependencies": {
     "@capacitor/android": "6.2.0",
@@ -31,7 +32,9 @@
     "vue-router": "latest"
   },
   "devDependencies": {
-    "@nuxtjs/ionic": "^0.15.1"
+    "@nuxtjs/ionic": "^0.15.1",
+    "cross-var": "^1.1.0",
+    "dotenv-cli": "^8.0.0"
   },
   "version": "0.0.0"
 }
