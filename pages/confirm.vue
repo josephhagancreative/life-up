@@ -1,34 +1,39 @@
 <template>
   <ion-page>
-    <ion-header>
-      <ion-toolbar>
-        <ion-title>Login</ion-title>
-      </ion-toolbar>
-    </ion-header>
-    <ion-content class="ion-padding">
-      <div>Waiting for login...</div>
-      {{ user }}
+    <ion-content>
+      <div class="container">
+        <ion-spinner color="primary" name="crescent" />
+      </div>
     </ion-content>
   </ion-page>
 </template>
 
 <script lang="ts" setup>
+definePageMeta({
+  middleware: ["auth-confirmation"],
+})
 const user = useSupabaseUser()
 
-if (user.value) {
-  console.log("user value!")
-  navigateTo("/")
-}
-
-watch(
-  user,
-  () => {
-    if (user.value) {
-      return navigateTo("/")
-    }
-  },
-  { immediate: true }
-)
+setTimeout(() => {
+  if (!user.value) {
+    navigateTo("/login")
+  } else {
+    navigateTo("/")
+  }
+}, 3000)
 </script>
 
-<style></style>
+<style scoped>
+.container {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+ion-spinner {
+  width: 50px;
+  height: 50px;
+}
+</style>

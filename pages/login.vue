@@ -1,21 +1,12 @@
 <template>
   <ion-page>
-    <ion-header>
-      <ion-toolbar>
-        <ion-title>Login</ion-title>
-      </ion-toolbar>
-    </ion-header>
-    <ion-content class="ion-padding">
-      <ion-list>
-        <ion-item>
-          <ion-input
-            label="Enter Email"
-            placeholder="Email"
-            v-model="email"
-          ></ion-input>
-          <ion-button @click="handleLogin">Login</ion-button>
-        </ion-item>
-      </ion-list>
+    <ion-content>
+      <div class="page-container">
+        <ion-spinner v-if="loading" color="primary" name="crescent" />
+        <ion-button v-else @click="handleLogin"
+          >Login/Signup With Google</ion-button
+        >
+      </div>
     </ion-content>
   </ion-page>
 </template>
@@ -23,26 +14,40 @@
 <script lang="ts" setup>
 const supabase = useSupabaseClient()
 const loading = ref(false)
-const email = ref("")
 const config = useRuntimeConfig()
 
 const handleLogin = async () => {
   try {
     loading.value = true
-    const { error } = await supabase.auth.signInWithOtp({
-      email: email.value,
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: "google",
       options: {
-        emailRedirectTo: config.public.baseUrl as string,
+        redirectTo: `${config.public.baseUrl}/confirm`,
       },
     })
-    if (error) throw error
-    alert("Check your email for the login link!")
+    if (error) {
+      console.error(error)
+    }
   } catch (error) {
-    alert(error.error_description || error.message)
+    console.error(error.error_description || error.message)
   } finally {
-    loading.value = false
+    setTimeout(() => {
+      loading.value = false
+    }, 1000)
   }
 }
 </script>
 
-<style></style>
+<style scoped>
+.page-container {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+ion-spinner {
+  width: 50px;
+  height: 50px;
+}
+</style>
