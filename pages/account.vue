@@ -12,24 +12,9 @@
       <ion-list>
         <ion-item>
           <ion-input
-            label="Enter Email"
-            placeholder="Email"
-            v-model="email"
-            readonly
-          />
-        </ion-item>
-        <ion-item>
-          <ion-input
             label="Username"
             placeholder="username"
             v-model="username"
-          />
-        </ion-item>
-        <ion-item>
-          <ion-input
-            label="Avatar Path"
-            placeholder="Avatar Path"
-            v-model="avatar_path"
           />
         </ion-item>
 
@@ -52,10 +37,10 @@ import type { Profile } from "~/database.types"
 
 const supabase = useSupabaseClient()
 
+const { refreshUserData } = useUser()
+
 const loading = ref(true)
 const username = ref("")
-const avatar_path = ref("")
-const email = ref("")
 
 loading.value = true
 const user = useSupabaseUser()
@@ -70,11 +55,8 @@ const { data: userData } = useAsyncData("mountains", async () => {
     .eq("id", user.value.id)
     .single<Pick<Profile, "username" | "avatar_url">>()
 
-  email.value = user.value.email ?? ""
-
   if (data) {
     username.value = data.username!
-    avatar_path.value = data.avatar_url!
   }
 
   loading.value = false
@@ -93,7 +75,6 @@ async function updateProfile() {
     const updates = {
       id: user.value.id,
       username: username.value,
-      avatar_url: avatar_path.value,
       updated_at: new Date(),
     }
 
@@ -101,6 +82,7 @@ async function updateProfile() {
       returning: "minimal",
     })
     if (error) throw error
+    await refreshUserData()
   } catch (error) {
     alert(error.message)
   } finally {

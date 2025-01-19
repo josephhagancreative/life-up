@@ -9,10 +9,7 @@
         <div v-for="type of taskTypesData" class="task-type">
           <h3>{{ type.name }}</h3>
           <div v-for="task of type.tasks" class="task-item">
-            <span>
-              {{ task.name }} +{{ task.experience }}xp
-              {{ task.is_one_time ? "onetime" : "" }}
-            </span>
+            <span> {{ task.name }} +{{ task.experience }}xp </span>
             <ion-button
               shape="round"
               color="success"
@@ -162,7 +159,7 @@ const completeTask = async (task: Task) => {
 ion-toast.task-complete-toast {
   --background: #fff;
   --box-shadow: 3px 3px 10px 0 rgba(0, 0, 0, 0.2);
-  --border-width: 5px;
+  --border-width: 2px;
   --border-style: solid;
   --border-color: var(--ion-color-success-tint);
 
