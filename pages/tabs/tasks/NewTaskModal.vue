@@ -1,5 +1,5 @@
 <template>
-  <ion-modal :is-open="isOpen">
+  <ion-modal :is-open="isOpen" @ionModalWillPresent="resetForm">
     <ion-header>
       <ion-toolbar>
         <ion-title>{{ isEdit ? "Edit Task" : "Add Task" }}</ion-title>
@@ -88,7 +88,12 @@ const defaultFormFields: FormFields = {
 
 const formFields = ref<FormFields>(defaultFormFields)
 
-// Initialize form with edit data if available
+const resetForm = () => {
+  if (!isEdit.value) {
+    formFields.value = cloneDeep(defaultFormFields)
+  }
+}
+
 watch(
   () => props.taskToEdit,
   (newTask) => {
