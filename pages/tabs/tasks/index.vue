@@ -38,7 +38,12 @@
             </ion-item-options>
           </ion-item-sliding>
         </div>
-        <NewTaskModal @added-task="refetchTasks" v-model="isOpen" />
+        <NewTaskModal
+          @added-task="refetchTasks"
+          @updated-task="refetchTasks"
+          v-model="isOpen"
+          :task-to-edit="taskToEdit"
+        />
       </div>
       <ion-fab slot="fixed" vertical="bottom" horizontal="end">
         <ion-fab-button @click="setOpen(true)">
@@ -63,6 +68,8 @@ const { addTaskHistory } = useTaskHistory()
 const setOpen = (open: boolean) => (isOpen.value = open)
 
 const isOpen = ref(false)
+
+const taskToEdit = ref<Task | undefined>()
 
 const { data: taskTypesData, refresh: refetchTasks } = useAsyncData(
   "taskTypesWithTasks",
@@ -95,15 +102,22 @@ const { data: taskTypesData, refresh: refetchTasks } = useAsyncData(
       )
       .eq("profile_id", user.value.id)
       .filter("tasks.is_active", "eq", true)
+      .order("name", { ascending: true })
 
     if (error) {
       console.error("Error fetching task types with tasks:", error)
       return
     }
 
-    return data.filter((task) => task.tasks.length) as Array<
+    const filteredData = data.filter((task) => task.tasks.length) as Array<
       TaskType & { tasks: Task[] }
     >
+
+    filteredData.forEach((taskType) => {
+      taskType.tasks.sort((a, b) => a.name.localeCompare(b.name))
+    })
+
+    return filteredData
   }
 )
 
@@ -147,8 +161,8 @@ const onDelete = async (task: Task) => {
 }
 
 const onEdit = (task: Task) => {
-  console.log("Edit task:", task)
-  // TODO: Implement edit functionality
+  taskToEdit.value = task
+  isOpen.value = true
 }
 </script>
 

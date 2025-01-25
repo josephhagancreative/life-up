@@ -2,9 +2,9 @@
   <ion-modal :is-open="isOpen">
     <ion-header>
       <ion-toolbar>
-        <ion-title>Add Task</ion-title>
+        <ion-title>{{ isEdit ? "Edit Task" : "Add Task" }}</ion-title>
         <ion-buttons slot="end">
-          <ion-button @click="isOpen = false">Close</ion-button>
+          <ion-button @click="handleClose">Close</ion-button>
         </ion-buttons>
       </ion-toolbar>
     </ion-header>
@@ -45,7 +45,9 @@
           ></ion-input>
         </ion-item>
         <ion-item>
-          <ion-button @click="handleAddTask">Add Task</ion-button>
+          <ion-button @click="handleSubmit"
+            >{{ isEdit ? "Update" : "Add" }} Task</ion-button
+          >
         </ion-item>
       </ion-list>
     </ion-content>
@@ -53,16 +55,22 @@
 </template>
 
 <script setup lang="ts">
-import type { TaskType } from "~/types/tables"
+import type { TaskType, Task } from "~/types/tables"
 import { cloneDeep } from "lodash"
 
 const emits = defineEmits<{
   (e: "addedTask"): void
+  (e: "updatedTask"): void
+}>()
+
+const props = defineProps<{
+  taskToEdit?: Task
 }>()
 
 const supabase = useSupabaseClient()
-
 const isOpen = defineModel<boolean>()
+
+const isEdit = computed(() => !!props.taskToEdit)
 
 type FormFields = {
   selectedTaskType: string | number | null
@@ -78,21 +86,54 @@ const defaultFormFields: FormFields = {
   xpValue: 0,
 }
 
-const formFields = ref(defaultFormFields)
+const formFields = ref<FormFields>(defaultFormFields)
 
+// Initialize form with edit data if available
 watch(
-  () => formFields.value.selectedTaskType,
-  (newVal, oldVal) => {
-    if (oldVal === "new" && newVal !== "new") {
-      formFields.value.taskTypeName = ""
+  () => props.taskToEdit,
+  (newTask) => {
+    if (newTask) {
+      formFields.value = {
+        selectedTaskType: newTask.type_id,
+        taskTypeName: "",
+        taskName: newTask.name,
+        xpValue: newTask.experience,
+      }
     }
-  }
+  },
+  { immediate: true }
 )
 
-watch(isOpen, () => {
+const handleClose = () => {
+  isOpen.value = false
   formFields.value = cloneDeep(defaultFormFields)
-  refetchTaskTypes()
-})
+}
+
+const handleSubmit = async () => {
+  if (!user.value) return
+
+  if (isEdit.value) {
+    await updateTask()
+  } else {
+    await createTask()
+  }
+}
+
+const updateTask = async () => {
+  const { error } = await supabase
+    .from("tasks")
+    .update({
+      name: formFields.value.taskName,
+      experience: formFields.value.xpValue,
+      type_id: formFields.value.selectedTaskType,
+    })
+    .eq("id", props.taskToEdit?.id)
+
+  if (!error) {
+    emits("updatedTask")
+    handleClose()
+  }
+}
 
 const user = useSupabaseUser()
 
@@ -123,7 +164,7 @@ const { data: taskTypes, refresh: refetchTaskTypes } = useAsyncData(
   }
 )
 
-const handleAddTask = async () => {
+const createTask = async () => {
   if (!user.value) {
     return
   }
