@@ -8,20 +8,35 @@
         </p>
         <div v-for="type of taskTypesData" class="task-type">
           <h3>{{ type.name }}</h3>
-          <div v-for="task of type.tasks" class="task-item">
-            <span> {{ task.name }} +{{ task.experience }}xp </span>
-            <ion-button
-              shape="round"
-              color="success"
-              @click="completeTask(task)"
-            >
-              <ion-icon
-                slot="icon-only"
-                color="light"
-                :icon="ioniconsCheckmark"
-              ></ion-icon>
-            </ion-button>
-          </div>
+          <ion-item-sliding v-for="task of type.tasks">
+            <ion-item-options side="start">
+              <ion-item-option color="warning" @click="onEdit(task)">
+                <ion-icon slot="icon-only" :icon="ioniconsPencil"></ion-icon>
+              </ion-item-option>
+            </ion-item-options>
+
+            <ion-item class="task-item">
+              <span> {{ task.name }} +{{ task.experience }}xp </span>
+              <ion-button
+                shape="round"
+                color="success"
+                @click="completeTask(task)"
+                slot="end"
+              >
+                <ion-icon
+                  slot="icon-only"
+                  color="light"
+                  :icon="ioniconsCheckmark"
+                ></ion-icon>
+              </ion-button>
+            </ion-item>
+
+            <ion-item-options side="end">
+              <ion-item-option color="danger" @click="onDelete(task)">
+                <ion-icon slot="icon-only" :icon="ioniconsTrash"></ion-icon>
+              </ion-item-option>
+            </ion-item-options>
+          </ion-item-sliding>
         </div>
         <NewTaskModal @added-task="refetchTasks" v-model="isOpen" />
       </div>
@@ -117,6 +132,24 @@ const completeTask = async (task: Task) => {
     }
   }
 }
+
+const onDelete = async (task: Task) => {
+  const { error } = await supabase
+    .from("tasks")
+    .update({ is_active: false })
+    .eq("id", task.id)
+
+  if (error) {
+    console.error("Error deactivating task:", error)
+    return
+  }
+  await refetchTasks()
+}
+
+const onEdit = (task: Task) => {
+  console.log("Edit task:", task)
+  // TODO: Implement edit functionality
+}
 </script>
 
 <style scoped>
@@ -145,13 +178,33 @@ const completeTask = async (task: Task) => {
 }
 
 .task-item {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+  --padding-start: 0.75rem;
+  --padding-end: 0;
+  --padding-top: 0.5rem;
+  --padding-bottom: 0.5rem;
+  --border-radius: 1rem;
+  --background: white;
+  --inner-border-width: 0px;
+  margin: 0;
+
+  ion-button {
+    --border-radius: 50%;
+    min-width: 40px;
+    min-height: 40px;
+    width: 40px;
+    height: 40px;
+    --padding-start: 0;
+    --padding-end: 0;
+    margin: 0;
+  }
+}
+
+ion-item-sliding {
   border: 1px solid var(--line-color);
-  background-color: white;
-  padding: 0.5rem 0.75rem;
   border-radius: 1rem;
+  margin: 0.25rem 0;
+  overflow: hidden;
+  padding: 0;
 }
 </style>
 
