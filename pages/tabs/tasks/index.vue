@@ -43,6 +43,7 @@
           @updated-task="refetchTasks"
           v-model="isOpen"
           :task-to-edit="taskToEdit"
+          @update:model-value="setOpen"
         />
       </div>
       <ion-fab slot="fixed" vertical="bottom" horizontal="end">
@@ -65,11 +66,21 @@ const user = useSupabaseUser()
 const { userData, userCompleteTask } = useUser()
 const { addTaskHistory } = useTaskHistory()
 
-const setOpen = (open: boolean) => (isOpen.value = open)
+const setOpen = (open: boolean) => {
+  isOpen.value = open
+  if (!open) {
+    taskToEdit.value = undefined
+  }
+}
 
 const isOpen = ref(false)
 
 const taskToEdit = ref<Task | undefined>()
+
+const onUpdatedTask = () => {
+  taskToEdit.value = undefined
+  refetchTasks()
+}
 
 const { data: taskTypesData, refresh: refetchTasks } = useAsyncData(
   "taskTypesWithTasks",
