@@ -9,6 +9,66 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      achievements: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: number
+          img_url: string | null
+          name: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: number
+          img_url?: string | null
+          name: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: number
+          img_url?: string | null
+          name?: string
+        }
+        Relationships: []
+      }
+      profile_achievements: {
+        Row: {
+          achievement_id: number | null
+          id: number
+          profile_id: string | null
+          unlocked_at: string
+        }
+        Insert: {
+          achievement_id?: number | null
+          id?: number
+          profile_id?: string | null
+          unlocked_at?: string
+        }
+        Update: {
+          achievement_id?: number | null
+          id?: number
+          profile_id?: string | null
+          unlocked_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "profile_achievements_achievement_id_fkey"
+            columns: ["achievement_id"]
+            isOneToOne: false
+            referencedRelation: "achievements"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "profile_achievements_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           avatar_url: string | null
