@@ -59,12 +59,15 @@
 import type { TaskType, Task } from "~/types/tables"
 import NewTaskModal from "./NewTaskModal.vue"
 import { incrementExperience } from "~/mutations/user"
+import { useAchievements } from "~/composables/useAchievements"
 
 const supabase = useSupabaseClient()
 const user = useSupabaseUser()
 
 const { userData, userCompleteTask } = useUser()
 const { addTaskHistory } = useTaskHistory()
+
+const { fetchAchievements } = useAchievements()
 
 const setOpen = (open: boolean) => {
   isOpen.value = open
@@ -76,11 +79,6 @@ const setOpen = (open: boolean) => {
 const isOpen = ref(false)
 
 const taskToEdit = ref<Task | undefined>()
-
-const onUpdatedTask = () => {
-  taskToEdit.value = undefined
-  refetchTasks()
-}
 
 const { data: taskTypesData, refresh: refetchTasks } = useAsyncData(
   "taskTypesWithTasks",
@@ -132,6 +130,8 @@ const { data: taskTypesData, refresh: refetchTasks } = useAsyncData(
   }
 )
 
+const { checkAchievements } = useProfileAchievements()
+
 const completeTask = async (task: Task) => {
   if (!user.value) {
     return
@@ -149,10 +149,11 @@ const completeTask = async (task: Task) => {
       })
       await toast.present()
       const targetXP = updatedUser.data[0].experience
-      if (!userData.value) {
-        return
-      }
-      await incrementExperience(userData, targetXP)
+      if (!userData.value) return
+      const userRef = ref(userData.value)
+      await incrementExperience(userRef, targetXP)
+      await checkAchievements()
+      await fetchAchievements()
       await refetchTasks()
     }
   }
