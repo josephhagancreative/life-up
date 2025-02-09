@@ -1,5 +1,4 @@
 import { calculateLevels, getCurrentLevel } from "~/helpers/user"
-import type { Task } from "~/types/tables"
 import type { AllLevels, UserProfile } from "~/types/user"
 
 export const useUser = () => {

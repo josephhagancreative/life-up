@@ -27,9 +27,7 @@
 </template>
 
 <script lang="ts" setup>
-import { useAchievements } from "~/composables/useAchievements"
-
-const { achievements } = useAchievements()
+const { achievements } = useApp()
 </script>
 
 <style scoped>

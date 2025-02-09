@@ -1,9 +1,11 @@
-import type { Achievement } from "~/types/tables"
+import type { AllLevels } from "~/types/user"
 
-export const useProfileAchievements = () => {
+export const useProfileAchievements = (
+  currentLevel: Ref<AllLevels>,
+  refreshUserData: () => Promise<void>
+) => {
   const supabase = useSupabaseClient()
   const user = useSupabaseUser()
-  const { currentLevel, refreshUserData } = useUser()
 
   const LEVEL_ACHIEVEMENTS = [
     { name: "Lvl 5", level: 5 },
@@ -14,6 +16,7 @@ export const useProfileAchievements = () => {
 
   const checkLevelAchievement = async () => {
     if (!user.value) return
+    console.log(currentLevel.value.level)
 
     const { data: achievements } = await supabase
       .from("achievements")

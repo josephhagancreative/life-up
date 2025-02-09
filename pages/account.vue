@@ -33,11 +33,11 @@
 </template>
 
 <script lang="ts" setup>
-import type { Profile } from "~/database.types"
+import type { Profile } from "~/types/tables"
 
 const supabase = useSupabaseClient()
 
-const { refreshUserData } = useUser()
+const { refreshUserData } = useApp()
 
 const loading = ref(true)
 const username = ref("")
@@ -75,16 +75,14 @@ async function updateProfile() {
     const updates = {
       id: user.value.id,
       username: username.value,
-      updated_at: new Date(),
+      updated_at: new Date().toISOString(),
     }
 
-    const { error } = await supabase.from("profiles").upsert(updates, {
-      returning: "minimal",
-    })
+    const { error } = await supabase.from("profiles").upsert(updates)
     if (error) throw error
     await refreshUserData()
   } catch (error) {
-    alert(error.message)
+    alert(error)
   } finally {
     loading.value = false
   }
@@ -98,7 +96,7 @@ async function signOut() {
     user.value = null
     navigateTo("/")
   } catch (error) {
-    alert(error.message)
+    alert(error)
   } finally {
     loading.value = false
   }

@@ -58,9 +58,8 @@
 <script lang="ts" setup>
 import type { Task } from "~/types/tables"
 import NewTaskModal from "./NewTaskModal.vue"
-import { useTasks } from "~/composables/useTasks"
 
-const { fetchTaskTypes, completeTask, deleteTask } = useTasks()
+const { fetchTaskTypes, completeTask, deleteTask } = useApp()
 
 const isOpen = ref(false)
 const taskToEdit = ref<Task | undefined>()

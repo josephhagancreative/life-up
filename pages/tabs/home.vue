@@ -63,9 +63,10 @@ const {
   currentLevel,
   nextLevel,
   userDeleteTaskHistory,
-} = useUser()
-
-const { taskHistories, refetchHistories, deleteTaskHistory } = useTaskHistory()
+  taskHistories,
+  refetchHistories,
+  deleteTaskHistory,
+} = useApp()
 
 type IonicRefresher = {
   target: HTMLIonRefresherElement

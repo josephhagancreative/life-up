@@ -29,7 +29,7 @@ const handleLogin = async () => {
       console.error(error)
     }
   } catch (error) {
-    console.error(error.error_description || error.message)
+    console.error(error)
   } finally {
     setTimeout(() => {
       loading.value = false

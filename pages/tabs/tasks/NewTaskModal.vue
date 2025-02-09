@@ -132,7 +132,7 @@ const updateTask = async () => {
       experience: formFields.value.xpValue,
       type_id: formFields.value.selectedTaskType,
     })
-    .eq("id", props.taskToEdit?.id)
+    .eq("id", props.taskToEdit!.id)
 
   if (!error) {
     emits("updatedTask")

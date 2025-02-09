@@ -26,7 +26,7 @@
 </template>
 
 <script lang="ts" setup>
-const { userData, currentLevel, nextLevel } = useUser()
+const { userData, currentLevel, nextLevel } = useApp()
 </script>
 
 <style scoped>

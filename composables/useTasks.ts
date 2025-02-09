@@ -1,13 +1,15 @@
 import { incrementExperience } from "~/mutations/user"
 import type { Task, TaskType } from "~/types/tables"
+import type { UserProfile } from "~/types/user"
 
-export const useTasks = () => {
+export const useTasks = (
+  userData: Ref<UserProfile>,
+  addTaskHistory: (task: Task) => Promise<any>,
+  checkAchievements: () => Promise<void>,
+  fetchAchievements: () => Promise<void>
+) => {
   const supabase = useSupabaseClient()
   const user = useSupabaseUser()
-  const { userData } = useUser()
-  const { addTaskHistory } = useTaskHistory()
-  const { checkAchievements } = useProfileAchievements()
-  const { fetchAchievements } = useAchievements()
 
   const fetchTaskTypes = async () => {
     if (!user.value) {
@@ -57,7 +59,7 @@ export const useTasks = () => {
   }
 
   const completeTask = async (task: Task) => {
-    if (!user.value || !userData.value) {
+    if (!user.value || !userData?.value) {
       return
     }
     const createdTaskHistory = await addTaskHistory(task)
