@@ -34,6 +34,7 @@ export const useTasks = (
           is_recurring,
           is_one_time,
           recurrence_interval,
+          type_id,
           created_at,
           updated_at
         )
@@ -48,15 +49,12 @@ export const useTasks = (
       return
     }
 
-    const filteredData = data.filter((task) => task.tasks.length) as Array<
-      TaskType & { tasks: Task[] }
-    >
+    taskTypes.value = data as Array<TaskType & { tasks: Task[] }>
 
-    filteredData.forEach((taskType) => {
+    taskTypes.value.forEach((taskType) => {
+      taskType.tasks = taskType.tasks || []
       taskType.tasks.sort((a, b) => a.name.localeCompare(b.name))
     })
-
-    taskTypes.value = filteredData
   }
 
   const completeTask = async (task: Task) => {

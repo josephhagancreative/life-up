@@ -58,13 +58,12 @@
 import type { TaskType, Task } from "~/types/tables"
 import { cloneDeep } from "lodash"
 
-const emits = defineEmits<{
-  (e: "addedTask"): void
-  (e: "updatedTask"): void
-}>()
+const user = useSupabaseUser()
 
 const props = defineProps<{
+  taskTypes: TaskType[]
   taskToEdit?: Task
+  refetchTaskTypes: () => Promise<void>
 }>()
 
 const supabase = useSupabaseClient()
@@ -130,44 +129,15 @@ const updateTask = async () => {
     .update({
       name: formFields.value.taskName,
       experience: formFields.value.xpValue,
-      type_id: formFields.value.selectedTaskType,
+      type_id: String(formFields.value.selectedTaskType),
     })
     .eq("id", props.taskToEdit!.id)
 
   if (!error) {
-    emits("updatedTask")
+    await props.refetchTaskTypes()
     handleClose()
   }
 }
-
-const user = useSupabaseUser()
-
-const { data: taskTypes, refresh: refetchTaskTypes } = useAsyncData(
-  "taskTypes",
-  async () => {
-    if (!user.value) {
-      return
-    }
-
-    const { data, error } = await supabase
-      .from("task_types")
-      .select(
-        `
-      id,
-      name,
-      created_at
-    `
-      )
-      .eq("profile_id", user.value.id)
-
-    if (error) {
-      console.error("Error fetching task types with tasks:", error)
-      return
-    }
-
-    return data as Array<TaskType>
-  }
-)
 
 const createTask = async () => {
   if (!user.value) {
@@ -185,9 +155,10 @@ const createTask = async () => {
       .select("id")
     if (addedTaskType.status === 201) {
       taskType = addedTaskType.data![0].id
+      await props.refetchTaskTypes()
     }
   }
-  const taskName = taskTypes.value?.find((type) => type.id === taskType)?.name
+  const taskName = props.taskTypes?.find((type) => type.id === taskType)?.name
   const isOneTimeTask = taskName === ONE_TIME_STRING
   const newTask = await supabase.from("tasks").insert({
     profile_id: user.value.id,
@@ -197,7 +168,7 @@ const createTask = async () => {
     is_one_time: isOneTimeTask,
   })
   if (newTask.status === 201) {
-    emits("addedTask")
+    await props.refetchTaskTypes()
     isOpen.value = false
   }
 }

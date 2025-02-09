@@ -6,7 +6,7 @@
         <p class="empty-text text-center" v-if="!taskTypes?.length">
           No tasks yet!
         </p>
-        <div v-for="type of taskTypes" class="task-type">
+        <div v-for="type of filteredTaskTypes" class="task-type">
           <h3>{{ type.name }}</h3>
           <ion-item-sliding v-for="task of type.tasks">
             <ion-item-options side="start">
@@ -39,8 +39,8 @@
           </ion-item-sliding>
         </div>
         <NewTaskModal
-          @added-task="fetchTaskTypes"
-          @updated-task="fetchTaskTypes"
+          :task-types="taskTypes ?? []"
+          :refetch-task-types="fetchTaskTypes"
           v-model="isOpen"
           :task-to-edit="taskToEdit"
           @update:model-value="setOpen"
@@ -63,6 +63,10 @@ const { fetchTaskTypes, completeTask, deleteTask, taskTypes } = useApp()
 
 const isOpen = ref(false)
 const taskToEdit = ref<Task | undefined>()
+
+const filteredTaskTypes = computed(
+  () => taskTypes.value?.filter((type) => type.tasks.length) ?? []
+)
 
 const setOpen = (open: boolean) => {
   isOpen.value = open
