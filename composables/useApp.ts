@@ -12,6 +12,7 @@ export const useApp = () => {
   const { achievements, fetchAchievements } = useAchievements()
 
   const { checkAchievements } = useProfileAchievements(
+    userData as Ref<UserProfile>,
     currentLevel,
     refreshUserData
   )

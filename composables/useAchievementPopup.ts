@@ -1,6 +1,5 @@
 export const useAchievementPopup = () => {
   const showAchievement = async (achievement: { name: string }) => {
-    console.log("showAchievement", achievement)
     const toast = await toastController.create({
       message: `Achievement Unlocked: ${achievement.name}`,
       duration: 3000,
