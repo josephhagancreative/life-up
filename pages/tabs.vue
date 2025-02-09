@@ -5,20 +5,16 @@
         <ion-router-outlet />
         <ion-tab-bar slot="bottom" selected-tab="home">
           <ion-tab-button tab="home" href="/tabs/home">
-            <ion-icon :icon="ioniconsPersonCircle" />
-            <ion-label>Dashboard</ion-label>
+            <ion-icon :icon="ioniconsGrid" />
           </ion-tab-button>
           <ion-tab-button tab="tasks" href="/tabs/tasks">
-            <ion-icon :icon="ioniconsRibbon" />
-            <ion-label>Tasks</ion-label>
+            <ion-icon :icon="ioniconsCheckmarkCircle" />
           </ion-tab-button>
           <ion-tab-button tab="stats" href="/tabs/stats">
-            <ion-icon :icon="ioniconsStatsChart" />
-            <ion-label>Stats</ion-label>
+            <ion-icon :icon="ioniconsTrophy" />
           </ion-tab-button>
           <ion-tab-button tab="settings" href="/tabs/settings">
-            <ion-icon :icon="ioniconsSettings" />
-            <ion-label>Settings</ion-label>
+            <ion-icon :icon="ioniconsPersonCircle" />
           </ion-tab-button>
         </ion-tab-bar>
       </ion-tabs>

@@ -3,11 +3,22 @@
     <ion-content>
       <div class="page-container">
         <h1>Settings</h1>
-        <div>
+        <div class="settings-section">
           <h2>Account</h2>
-          <ion-button router-link="/account">Account Page</ion-button>
+          <ion-list>
+            <ion-item>
+              <ion-input
+                label="Username:"
+                placeholder="username"
+                v-model="username"
+              />
+              <ion-button @click="updateProfile" :disabled="loading">
+                {{ loading ? "Loading" : "Update" }}
+              </ion-button>
+            </ion-item>
+          </ion-list>
         </div>
-        <div>
+        <div class="settings-section">
           <h2>Theme</h2>
           <div class="button-container">
             <button
@@ -19,14 +30,32 @@
             </button>
           </div>
         </div>
+        <div class="settings-section">
+          <ion-button
+            class="sign-out-button"
+            color="danger"
+            @click="signOut"
+            :disabled="loading"
+          >
+            Sign Out
+          </ion-button>
+        </div>
       </div>
     </ion-content>
   </PageContainer>
 </template>
+
 <script lang="ts" setup>
 import type { AppThemeColors } from "~/types/theme"
 
+const supabase = useSupabaseClient()
 const { $setThemeColor } = useNuxtApp()
+const { refreshUserData, userData } = useApp()
+
+const loading = ref(false)
+const username = ref("")
+const user = useSupabaseUser()
+
 const themeColors: AppThemeColors[] = [
   "red",
   "orange",
@@ -38,9 +67,66 @@ const themeColors: AppThemeColors[] = [
   "green",
   "slate",
 ]
+
+watchEffect(() => {
+  if (userData.value?.username) {
+    username.value = userData.value.username
+  }
+})
+
+async function updateProfile() {
+  try {
+    loading.value = true
+    if (!user.value) return
+
+    const updates = {
+      id: user.value.id,
+      username: username.value,
+      updated_at: new Date().toISOString(),
+    }
+
+    const { error } = await supabase.from("profiles").upsert(updates)
+    if (error) throw error
+    await refreshUserData()
+  } catch (error) {
+    alert(error)
+  } finally {
+    loading.value = false
+  }
+}
+
+async function signOut() {
+  try {
+    loading.value = true
+    const { error } = await supabase.auth.signOut()
+    if (error) throw error
+    user.value = null
+    navigateTo("/")
+  } catch (error) {
+    alert(error)
+  } finally {
+    loading.value = false
+  }
+}
 </script>
 
 <style scoped>
+.page-container {
+  padding: 1rem;
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.settings-section {
+  margin-bottom: 1rem;
+
+  &:last-child {
+    margin-top: auto;
+    margin-bottom: 0.5rem;
+  }
+}
+
 .button-container {
   display: flex;
   gap: 0.25rem;
@@ -141,5 +227,10 @@ const themeColors: AppThemeColors[] = [
       background-color: var(--theme-slate-shade);
     }
   }
+}
+
+.sign-out-button {
+  width: 100%;
+  margin-top: 2rem;
 }
 </style>

@@ -30,6 +30,7 @@ export const useAchievements = () => {
       )
       .eq("profile_achievements.profile_id", user.value.id)
       .returns<any[]>()
+      .order("created_at", { ascending: true })
 
     if (error) return
 
