@@ -3,10 +3,10 @@
     <ion-content>
       <div class="task-container">
         <h1>Tasks</h1>
-        <p class="empty-text text-center" v-if="!taskTypesData?.length">
+        <p class="empty-text text-center" v-if="!taskTypes?.length">
           No tasks yet!
         </p>
-        <div v-for="type of taskTypesData" class="task-type">
+        <div v-for="type of taskTypes" class="task-type">
           <h3>{{ type.name }}</h3>
           <ion-item-sliding v-for="task of type.tasks">
             <ion-item-options side="start">
@@ -39,8 +39,8 @@
           </ion-item-sliding>
         </div>
         <NewTaskModal
-          @added-task="refetchTasks"
-          @updated-task="refetchTasks"
+          @added-task="fetchTaskTypes"
+          @updated-task="fetchTaskTypes"
           v-model="isOpen"
           :task-to-edit="taskToEdit"
           @update:model-value="setOpen"
@@ -59,15 +59,10 @@
 import type { Task } from "~/types/tables"
 import NewTaskModal from "./NewTaskModal.vue"
 
-const { fetchTaskTypes, completeTask, deleteTask } = useApp()
+const { fetchTaskTypes, completeTask, deleteTask, taskTypes } = useApp()
 
 const isOpen = ref(false)
 const taskToEdit = ref<Task | undefined>()
-
-const { data: taskTypesData, refresh: refetchTasks } = useAsyncData(
-  "taskTypesWithTasks",
-  () => fetchTaskTypes()
-)
 
 const setOpen = (open: boolean) => {
   isOpen.value = open
@@ -79,7 +74,7 @@ const setOpen = (open: boolean) => {
 const onDelete = async (task: Task) => {
   const success = await deleteTask(task)
   if (success) {
-    await refetchTasks()
+    await fetchTaskTypes()
   }
 }
 

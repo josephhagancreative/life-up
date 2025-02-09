@@ -10,6 +10,8 @@ export const useTasks = (
   const supabase = useSupabaseClient()
   const user = useSupabaseUser()
 
+  const taskTypes = ref<(TaskType & { tasks: Task[] })[] | null>(null)
+
   const fetchTaskTypes = async () => {
     if (!user.value) {
       return
@@ -54,7 +56,7 @@ export const useTasks = (
       taskType.tasks.sort((a, b) => a.name.localeCompare(b.name))
     })
 
-    return filteredData
+    taskTypes.value = filteredData
   }
 
   const completeTask = async (task: Task) => {
@@ -76,6 +78,7 @@ export const useTasks = (
       const targetXP = userData.value.experience + task.experience
       const userRef = ref(userData.value)
       await incrementExperience(userRef, targetXP)
+      await fetchTaskTypes()
       await checkAchievements()
       return true
     }
@@ -95,9 +98,14 @@ export const useTasks = (
     return true
   }
 
+  onMounted(() => {
+    fetchTaskTypes()
+  })
+
   return {
     fetchTaskTypes,
     completeTask,
     deleteTask,
+    taskTypes,
   }
 }

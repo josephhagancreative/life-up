@@ -19,7 +19,7 @@ export const useApp = () => {
   const { taskHistories, addTaskHistory, refetchHistories, deleteTaskHistory } =
     useTaskHistory()
 
-  const { fetchTaskTypes, completeTask, deleteTask } = useTasks(
+  const { taskTypes, fetchTaskTypes, completeTask, deleteTask } = useTasks(
     userData as Ref<UserProfile>,
     addTaskHistory,
     checkAchievements
@@ -41,5 +41,6 @@ export const useApp = () => {
     refetchHistories,
     deleteTaskHistory,
     checkAchievements,
+    taskTypes,
   }
 }
