@@ -4,7 +4,7 @@ import type { Task, TaskType } from "~/types/tables"
 export const useTasks = () => {
   const supabase = useSupabaseClient()
   const user = useSupabaseUser()
-  const { userData, userCompleteTask } = useUser()
+  const { userData } = useUser()
   const { addTaskHistory } = useTaskHistory()
   const { checkAchievements } = useProfileAchievements()
   const { fetchAchievements } = useAchievements()
@@ -57,29 +57,27 @@ export const useTasks = () => {
   }
 
   const completeTask = async (task: Task) => {
-    if (!user.value) {
+    if (!user.value || !userData.value) {
       return
     }
-    const updatedUser = await userCompleteTask(task)
-    if (updatedUser.status === 200 && updatedUser.data) {
-      const createdTaskHistory = await addTaskHistory(task)
-      if (createdTaskHistory.status === 201) {
-        const toast = await toastController.create({
-          header: "Task Completed: ",
-          message: `Completed ${task.name}! New XP: ${updatedUser.data[0].experience}`,
-          duration: 5000,
-          cssClass: "task-complete-toast",
-          swipeGesture: "vertical",
-        })
-        await toast.present()
-        const targetXP = updatedUser.data[0].experience
-        if (!userData.value) return
-        const userRef = ref(userData.value)
-        await incrementExperience(userRef, targetXP)
-        await checkAchievements()
-        await fetchAchievements()
-        return true
-      }
+    const createdTaskHistory = await addTaskHistory(task)
+    if (createdTaskHistory.status === 201) {
+      const toast = await toastController.create({
+        header: "Task Completed: ",
+        message: `Completed ${task.name}! New XP: ${
+          userData.value.experience + task.experience
+        }`,
+        duration: 5000,
+        cssClass: "task-complete-toast",
+        swipeGesture: "vertical",
+      })
+      await toast.present()
+      const targetXP = userData.value.experience + task.experience
+      const userRef = ref(userData.value)
+      await incrementExperience(userRef, targetXP)
+      await checkAchievements()
+      await fetchAchievements()
+      return true
     }
     return false
   }

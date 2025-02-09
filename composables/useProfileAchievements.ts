@@ -3,7 +3,7 @@ import type { Achievement } from "~/types/tables"
 export const useProfileAchievements = () => {
   const supabase = useSupabaseClient()
   const user = useSupabaseUser()
-  const { currentLevel } = useUser()
+  const { currentLevel, refreshUserData } = useUser()
 
   const LEVEL_ACHIEVEMENTS = [
     { name: "Lvl 5", level: 5 },
@@ -57,6 +57,7 @@ export const useProfileAchievements = () => {
   }
 
   const checkAchievements = async () => {
+    await refreshUserData()
     await checkLevelAchievement()
   }
 

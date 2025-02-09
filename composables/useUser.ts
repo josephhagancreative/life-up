@@ -42,14 +42,6 @@ export const useUser = () => {
     }
   )
 
-  const userCompleteTask = async (task: Task) => {
-    return await supabase
-      .from("profiles")
-      .update({ experience: userData.value!.experience + task.experience })
-      .eq("id", user.value!.id)
-      .select()
-  }
-
   const userDeleteTaskHistory = async (xp: number) => {
     return await supabase
       .from("profiles")
@@ -63,7 +55,6 @@ export const useUser = () => {
     refreshUserData,
     currentLevel,
     nextLevel,
-    userCompleteTask,
     userDeleteTaskHistory,
   }
 }
