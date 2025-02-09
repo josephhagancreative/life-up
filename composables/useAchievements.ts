@@ -44,7 +44,6 @@ export const useAchievements = () => {
       })) ?? []
   }
 
-  // Initial fetch
   onMounted(() => {
     fetchAchievements()
   })

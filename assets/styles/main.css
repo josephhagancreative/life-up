@@ -157,3 +157,19 @@
   font-size: 0.9rem;
   color: var(--ion-color-medium);
 }
+
+.achievement-toast {
+  --background: #fff;
+  --box-shadow: 3px 3px 10px 0 rgba(0, 0, 0, 0.2);
+  --border-width: 2px;
+  --border-style: solid;
+  --border-color: var(--ion-color-success-tint);
+
+  &::part(header) {
+    color: var(--ion-color-success-shade);
+  }
+
+  &::part(message) {
+    font-weight: bold;
+  }
+}

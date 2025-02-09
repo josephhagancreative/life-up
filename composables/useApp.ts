@@ -22,8 +22,7 @@ export const useApp = () => {
   const { fetchTaskTypes, completeTask, deleteTask } = useTasks(
     userData as Ref<UserProfile>,
     addTaskHistory,
-    checkAchievements,
-    fetchAchievements
+    checkAchievements
   )
 
   return {

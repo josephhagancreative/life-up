@@ -5,8 +5,7 @@ import type { UserProfile } from "~/types/user"
 export const useTasks = (
   userData: Ref<UserProfile>,
   addTaskHistory: (task: Task) => Promise<any>,
-  checkAchievements: () => Promise<void>,
-  fetchAchievements: () => Promise<void>
+  checkAchievements: () => Promise<void>
 ) => {
   const supabase = useSupabaseClient()
   const user = useSupabaseUser()
@@ -78,7 +77,6 @@ export const useTasks = (
       const userRef = ref(userData.value)
       await incrementExperience(userRef, targetXP)
       await checkAchievements()
-      await fetchAchievements()
       return true
     }
     return false

@@ -16,7 +16,6 @@ export const useProfileAchievements = (
 
   const checkLevelAchievement = async () => {
     if (!user.value) return
-    console.log(currentLevel.value.level)
 
     const { data: achievements } = await supabase
       .from("achievements")
@@ -55,6 +54,11 @@ export const useProfileAchievements = (
           .update({ unlocked_at: new Date().toISOString() })
           .eq("profile_id", user.value.id)
           .eq("achievement_id", achievement.id)
+
+        const { showAchievement } = useAchievementPopup()
+        showAchievement({
+          name: achievement.name,
+        })
       }
     }
   }

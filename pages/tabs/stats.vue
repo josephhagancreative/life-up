@@ -27,7 +27,11 @@
 </template>
 
 <script lang="ts" setup>
-const { achievements } = useApp()
+const { achievements, fetchAchievements } = useApp()
+
+onIonViewWillEnter(() => {
+  fetchAchievements()
+})
 </script>
 
 <style scoped>
