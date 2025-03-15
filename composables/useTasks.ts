@@ -51,6 +51,14 @@ export const useTasks = (
 
     taskTypes.value = data as Array<TaskType & { tasks: Task[] }>
 
+    const oneTimeIndex = taskTypes.value.findIndex(
+      (type) => type.name === ONE_TIME_STRING
+    )
+    if (oneTimeIndex > -1) {
+      const [oneTime] = taskTypes.value.splice(oneTimeIndex, 1)
+      taskTypes.value.unshift(oneTime)
+    }
+
     taskTypes.value.forEach((taskType) => {
       taskType.tasks = taskType.tasks || []
       taskType.tasks.sort((a, b) => a.name.localeCompare(b.name))
