@@ -8,48 +8,53 @@
         </ion-buttons>
       </ion-toolbar>
     </ion-header>
-    <ion-content class="ion-padding">
-      <ion-list>
-        <ion-item>
-          <ion-select
-            label="Task Type"
-            placeholder="Select a type"
-            v-model="formFields.selectedTaskType"
-          >
-            <ion-select-option v-for="type of taskTypes" :value="type.id">{{
-              type.name
-            }}</ion-select-option>
-            <ion-select-option :value="'new'">Add a type</ion-select-option>
-          </ion-select>
-        </ion-item>
-        <ion-item v-if="formFields.selectedTaskType === 'new'">
-          <ion-input
-            label="New Task Type"
-            placeholder="Enter type name"
-            v-model="formFields.taskTypeName"
-          ></ion-input>
-        </ion-item>
-        <ion-item>
-          <ion-input
-            label="Task"
-            placeholder="Enter task"
-            v-model="formFields.taskName"
-          ></ion-input>
-        </ion-item>
-        <ion-item>
-          <ion-input
-            type="number"
-            label="Experience"
-            placeholder="Enter XP value"
-            v-model="formFields.xpValue"
-          ></ion-input>
-        </ion-item>
-        <ion-item>
-          <ion-button @click="handleSubmit"
+    <ion-content>
+      <div class="content">
+        <ion-select
+          label="Task Type"
+          label-placement="stacked"
+          fill="outline"
+          placeholder="Select a type"
+          mode="md"
+          v-model="formFields.selectedTaskType"
+        >
+          <ion-select-option v-for="type of taskTypes" :value="type.id">{{
+            type.name
+          }}</ion-select-option>
+          <ion-select-option :value="'new'">Add a type</ion-select-option>
+        </ion-select>
+        <ion-input
+          v-if="formFields.selectedTaskType === 'new'"
+          label="New Task Type"
+          label-placement="stacked"
+          fill="outline"
+          mode="md"
+          placeholder="Enter type name"
+          v-model="formFields.taskTypeName"
+        ></ion-input>
+        <ion-input
+          label="Task"
+          label-placement="stacked"
+          fill="outline"
+          mode="md"
+          placeholder="Enter task"
+          v-model="formFields.taskName"
+        ></ion-input>
+        <ion-input
+          type="number"
+          label="Experience"
+          label-placement="stacked"
+          fill="outline"
+          mode="md"
+          placeholder="Enter XP value"
+          v-model="formFields.xpValue"
+        ></ion-input>
+        <div class="button-container">
+          <ion-button expand="block" @click="handleSubmit"
             >{{ isEdit ? "Update" : "Add" }} Task</ion-button
           >
-        </ion-item>
-      </ion-list>
+        </div>
+      </div>
     </ion-content>
   </ion-modal>
 </template>
@@ -173,3 +178,18 @@ const createTask = async () => {
   }
 }
 </script>
+
+<style scoped>
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  height: 100%;
+  justify-content: space-between;
+  padding: 1rem;
+}
+
+.button-container {
+  margin-top: auto;
+}
+</style>

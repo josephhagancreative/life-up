@@ -2,7 +2,7 @@
   <PageContainer>
     <ion-content>
       <div class="task-container">
-        <h1>Tasks</h1>
+        <h2>Tasks</h2>
         <p class="empty-text text-center" v-if="!taskTypes?.length">
           No tasks yet!
         </p>
@@ -17,12 +17,7 @@
 
             <ion-item class="task-item">
               <span> {{ task.name }} +{{ task.experience }}xp </span>
-              <ion-button
-                shape="round"
-                color="success"
-                @click="completeTask(task)"
-                slot="end"
-              >
+              <ion-button shape="round" @click="completeTask(task)" slot="end">
                 <ion-icon
                   slot="icon-only"
                   color="light"

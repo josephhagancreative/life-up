@@ -2,21 +2,19 @@
   <PageContainer>
     <ion-content>
       <div class="page-container">
-        <h1>Settings</h1>
         <div class="settings-section">
           <h2>Account</h2>
-          <ion-list>
-            <ion-item>
-              <ion-input
-                label="Username:"
-                placeholder="username"
-                v-model="username"
-              />
-              <ion-button @click="updateProfile" :disabled="loading">
-                {{ loading ? "Loading" : "Update" }}
-              </ion-button>
-            </ion-item>
-          </ion-list>
+          <ion-input
+            label="Username:"
+            placeholder="username"
+            label-placement="stacked"
+            fill="outline"
+            mode="md"
+            v-model="username"
+          />
+          <ion-button @click="updateProfile" :disabled="loading">
+            {{ loading ? "Loading" : "Update" }}
+          </ion-button>
         </div>
         <div class="settings-section">
           <h2>Theme</h2>
@@ -112,13 +110,15 @@ async function signOut() {
 
 <style scoped>
 .page-container {
-  padding: 1rem;
   min-height: 100%;
   display: flex;
   flex-direction: column;
 }
 
 .settings-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
   margin-bottom: 1rem;
 
   &:last-child {

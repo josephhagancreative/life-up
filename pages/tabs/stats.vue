@@ -2,7 +2,6 @@
   <PageContainer>
     <ion-content class="ion-padding">
       <div class="page-container">
-        <h1>Stats</h1>
         <h2>Achievements</h2>
         <div v-if="achievements" class="achievements-grid">
           <div
