@@ -107,7 +107,7 @@ export const useProfileAchievements = (
       .eq("profile_id", user.value!.id)
       .eq("achievement_id", achievementId)
 
-    const { showAchievement } = useAchievementPopup()
+    const { showAchievement } = usePopup()
     showAchievement({
       name: achievementName,
     })

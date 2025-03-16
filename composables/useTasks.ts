@@ -73,9 +73,7 @@ export const useTasks = (
     if (createdTaskHistory.status === 201) {
       const toast = await toastController.create({
         header: "Task Completed: ",
-        message: `Completed ${task.name}! New XP: ${
-          userData.value.experience + task.experience
-        }`,
+        message: `Completed ${task.name}!`,
         duration: 5000,
         cssClass: "task-complete-toast",
         swipeGesture: "vertical",

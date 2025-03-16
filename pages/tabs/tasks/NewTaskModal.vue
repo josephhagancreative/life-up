@@ -74,6 +74,8 @@ const props = defineProps<{
 const supabase = useSupabaseClient()
 const isOpen = defineModel<boolean>()
 
+const { showError } = usePopup()
+
 const isEdit = computed(() => !!props.taskToEdit)
 
 type FormFields = {
@@ -87,7 +89,7 @@ const defaultFormFields: FormFields = {
   selectedTaskType: null,
   taskTypeName: "",
   taskName: "",
-  xpValue: 0,
+  xpValue: 1,
 }
 
 const formFields = ref<FormFields>(defaultFormFields)
@@ -149,8 +151,16 @@ const createTask = async () => {
     return
   }
   let taskType = formFields.value.selectedTaskType
+  if (!taskType) {
+    showError("Please select a task type")
+    return
+  }
 
   if (taskType === "new") {
+    if (!formFields.value.taskTypeName) {
+      showError("Please enter a task type name")
+      return
+    }
     const addedTaskType = await supabase
       .from("task_types")
       .insert({
@@ -162,6 +172,10 @@ const createTask = async () => {
       taskType = addedTaskType.data![0].id
       await props.refetchTaskTypes()
     }
+  }
+  if (!formFields.value.taskName) {
+    showError("Please enter a task")
+    return
   }
   const taskName = props.taskTypes?.find((type) => type.id === taskType)?.name
   const isOneTimeTask = taskName === ONE_TIME_STRING

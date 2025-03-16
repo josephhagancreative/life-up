@@ -173,3 +173,19 @@
     font-weight: bold;
   }
 }
+
+.error-toast {
+  --background: #fff;
+  --box-shadow: 3px 3px 10px 0 rgba(0, 0, 0, 0.2);
+  --border-width: 2px;
+  --border-style: solid;
+  --border-color: var(--ion-color-danger-tint);
+
+  &::part(header) {
+    color: var(--ion-color-danger-shade);
+  }
+
+  &::part(message) {
+    font-weight: bold;
+  }
+}
