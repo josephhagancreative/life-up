@@ -2,6 +2,10 @@
   <PageContainer>
     <ion-content class="ion-padding">
       <div class="page-container">
+        <h2>Stats</h2>
+        <div class="stats-container">
+          <p>Total Completed Tasks: {{ totalCompletedTasks }}</p>
+        </div>
         <h2>Achievements</h2>
         <div v-if="achievements" class="achievements-grid">
           <div
@@ -26,7 +30,7 @@
 </template>
 
 <script lang="ts" setup>
-const { achievements, fetchAchievements } = useApp()
+const { achievements, fetchAchievements, totalCompletedTasks } = useApp()
 
 onIonViewWillEnter(() => {
   fetchAchievements()

@@ -17,8 +17,13 @@ export const useApp = () => {
     refreshUserData
   )
 
-  const { taskHistories, addTaskHistory, refetchHistories, deleteTaskHistory } =
-    useTaskHistory()
+  const {
+    taskHistories,
+    addTaskHistory,
+    refetchHistories,
+    deleteTaskHistory,
+    totalCompletedTasks,
+  } = useTaskHistory()
 
   const { taskTypes, fetchTaskTypes, completeTask, deleteTask } = useTasks(
     userData as Ref<UserProfile>,
@@ -43,5 +48,6 @@ export const useApp = () => {
     deleteTaskHistory,
     checkAchievements,
     taskTypes,
+    totalCompletedTasks,
   }
 }

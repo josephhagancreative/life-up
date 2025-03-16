@@ -6,7 +6,7 @@ export const useTaskHistory = () => {
   const user = useSupabaseUser()
 
   const { data: taskHistories, refresh: refetchHistories } = useAsyncData(
-    "taskHistories",
+    "taskHistoriesList",
     async () => {
       if (!user.value) {
         return
@@ -33,22 +33,39 @@ export const useTaskHistory = () => {
   )
 
   const addTaskHistory = async (task: Task) => {
-    return await supabase.from("task_history").insert({
+    const createdHistroy = await supabase.from("task_history").insert({
       experience_earned: task.experience,
       profile_id: user.value?.id!,
       task_id: task.id,
       completed_at: new Date().toISOString(),
     })
+    await refetchTotalCompletedTasks()
+    return createdHistroy
   }
 
   const deleteTaskHistory = async (id: string) => {
     return await supabase.from("task_history").delete().eq("id", id)
   }
 
+  const { data: totalCompletedTasks, refresh: refetchTotalCompletedTasks } =
+    useAsyncData("taskHistoriesCount", async () => {
+      if (!user.value) {
+        return 0
+      }
+      const { count } = await supabase
+        .from("task_history")
+        .select("*", { count: "exact", head: true })
+        .eq("profile_id", user.value.id)
+
+      return count
+    })
+
   return {
     taskHistories,
     addTaskHistory,
     refetchHistories,
     deleteTaskHistory,
+    totalCompletedTasks,
+    refetchTotalCompletedTasks,
   }
 }
