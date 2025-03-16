@@ -183,7 +183,7 @@ const createTask = async () => {
 .content {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 1rem;
   height: 100%;
   justify-content: space-between;
   padding: 1rem;

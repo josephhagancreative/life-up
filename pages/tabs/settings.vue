@@ -32,6 +32,7 @@
           <ion-button
             class="sign-out-button"
             color="danger"
+            fill="outline"
             @click="signOut"
             :disabled="loading"
           >

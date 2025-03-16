@@ -54,6 +54,7 @@ const handleLogin = async () => {
   }
 
   > .copy {
+    text-align: center;
     font-size: 1.2rem;
   }
 
