@@ -16,9 +16,9 @@ const user = useSupabaseUser()
 
 setTimeout(() => {
   if (!user.value) {
-    navigateTo("/login")
-  } else {
     navigateTo("/")
+  } else {
+    navigateTo("/tabs/home")
   }
 }, 3000)
 </script>

@@ -5,6 +5,9 @@
         <ion-back-button />
       </ion-buttons>
       <header class="header">
+        <div class="logo">
+          <icon name="i:logo" size="36" alt="Logo" class="icon" />
+        </div>
         <div class="user-profile" v-if="userData">
           <div class="text-container">
             <p class="text -user">{{ userData?.username }}</p>
@@ -32,9 +35,21 @@ const { userData, currentLevel, nextLevel } = useApp()
 <style scoped>
 .header {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
   align-items: center;
   padding: 0.25rem 1rem;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  color: var(--ion-color-primary-shade);
+}
+
+.img {
+  max-width: 40px;
+  height: auto;
+  width: 100%;
 }
 
 .user-profile {
